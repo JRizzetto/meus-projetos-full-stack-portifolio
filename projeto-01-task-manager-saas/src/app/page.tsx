@@ -7,6 +7,16 @@ export default function Home() {
   const [isPlansOpen, setIsPlansOpen] = useState(false);
   const [isPricesOpen, setIsPricesOpen] = useState(false);
 
+  const isAnyMenuOpen =
+    isFunctionOpen || isSolutionOpen || isPlansOpen || isPricesOpen;
+
+  const closeAllMenus = () => {
+    setIsFunctionOpen(false);
+    setIsSolutionOpen(false);
+    setIsPlansOpen(false);
+    setIsPricesOpen(false);
+  };
+
   const openMenu = (menuToOpen: string) => {
     if (menuToOpen === "functions" && isFunctionOpen) {
       setIsFunctionOpen(false);
@@ -36,11 +46,18 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gray-50 text-gray-900">
-      <header className="border-b border-gray-200 bg-white transition: shadow duration-300 hover:shadow-lg">
+      <header className="border-b border-gray-200 bg-white transition: shadow duration-300 hover:shadow-lg relative z-10">
+        {isAnyMenuOpen && (
+          <div
+            onClick={closeAllMenus}
+            className="fixed inset-0 bg-black/50 z-20"
+          ></div>
+        )}
+
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <h1 className="text-2xl font-bold text-indigo-600">TaskFlow</h1>
 
-          <div className="flex gap-10 font-bold relative">
+          <div className="flex gap-10 font-bold">
             <button
               onClick={() => openMenu("functions")}
               className="hover:text-indigo-600 transition-colors cursor-pointer"
@@ -50,7 +67,7 @@ export default function Home() {
             </button>
 
             {isFunctionOpen && (
-              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-1  w-[100vw] left-1/2 -translate-x-1/2">
+              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-30 w-[100vw] left-1/2 -translate-x-1/2 transition-all duration-500">
                 <div className="mx-auto max-w-6xl px-6 py-4">
                   <div className="flex gap-8">
                     <div>
@@ -99,7 +116,7 @@ export default function Home() {
             </button>
 
             {isSolutionOpen && (
-              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-1 w-[100vw] -translate-x-1/2 left-1/2">
+              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-30 w-[100vw] -translate-x-1/2 left-1/2">
                 <div className="mx-auto max-w-6xl px-6 py-4">
                   <div className="flex gap-8">
                     <div>
@@ -149,7 +166,7 @@ export default function Home() {
             </button>
 
             {isPlansOpen && (
-              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-1 w-[100vw] left-1/2 -translate-x-1/2">
+              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-30 w-[100vw] left-1/2 -translate-x-1/2">
                 <div className="mx-auto max-w-6xl px-6 py-4">
                   <div className="flex gap-8">
                     <div>
@@ -189,7 +206,7 @@ export default function Home() {
             </button>
 
             {isPricesOpen && (
-              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-1 w-[100vw] left-1/2 -translate-x-1/2">
+              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-30 w-[100vw] left-1/2 -translate-x-1/2">
                 <div className="mx-auto max-w-6xl px-6 py-4">
                   <div className="flex gap-8">
                     <div>
@@ -240,22 +257,36 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="mx-auto max-w-6xl px-6 py-20 bg-blue-200">
-        <div>
-          <div>
-            <span>Productivity SaaS</span>
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <div className="grid items-center gap-12 md:grid-cols-2">
+          <div className="space-y-6">
+            <span className="inline-block rounded-full bg-indigo-100 px-3 py-1 text-sm font-medium text-indigo-700">
+              Productivity SaaS
+            </span>
 
-            <h2>Organize your tasks and focus on what matters </h2>
+            <h2 className="text-4xl font-bold leading-tight md:text-5xl">
+              Organize your tasks and focus on what matters{" "}
+            </h2>
 
-            <p>
+            <p className="text-lg text-gray-600">
               A simple and modern task manager to help you stay productive,
               manage priorities, and keep track of your daily work.
             </p>
 
-            <div>
-              <a href="/register">Create Acount</a>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <a
+                href="/register"
+                className="rounded-lg bg-indigo-600 px-6 py-3 text-center font-medium text-white hover:bg-indigo-700"
+              >
+                Create Acount
+              </a>
 
-              <a href="/login">Login</a>
+              <a
+                href="/login"
+                className="rounded-lg border border-gray-300 px-6 py-3 text-center font-medium text-gray-700 hover:bg-gray-200"
+              >
+                Login
+              </a>
             </div>
           </div>
 
