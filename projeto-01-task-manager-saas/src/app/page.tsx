@@ -7,44 +7,219 @@ export default function Home() {
   const [isPlansOpen, setIsPlansOpen] = useState(false);
   const [isPricesOpen, setIsPricesOpen] = useState(false);
 
+  const openMenu = (menuToOpen: string) => {
+    if (menuToOpen === "functions" && isFunctionOpen) {
+      setIsFunctionOpen(false);
+      return;
+    }
+
+    if (menuToOpen === "solution" && isSolutionOpen === true) {
+      setIsSolutionOpen(false);
+      return;
+    }
+
+    if (menuToOpen === "plans" && isPlansOpen === true) {
+      setIsPlansOpen(false);
+      return;
+    }
+
+    if (menuToOpen === "prices" && isPricesOpen === true) {
+      setIsPricesOpen(false);
+      return;
+    }
+
+    setIsFunctionOpen(menuToOpen === "functions");
+    setIsSolutionOpen(menuToOpen === "solution");
+    setIsPlansOpen(menuToOpen === "plans");
+    setIsPricesOpen(menuToOpen === "prices");
+  };
+
   return (
     <main className="min-h-screen bg-gray-50 text-gray-900">
       <header className="border-b border-gray-200 bg-white transition: shadow duration-300 hover:shadow-lg">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <h1 className="text-2xl font-bold text-indigo-600">TaskFlow</h1>
 
-          <div className="flex gap-10 font-bold">
+          <div className="flex gap-10 font-bold relative">
             <button
-              onClick={() => setIsFunctionOpen(!isFunctionOpen)}
+              onClick={() => openMenu("functions")}
               className="hover:text-indigo-600 transition-colors cursor-pointer"
             >
               Functions
               <span className="ml-1 text-sm">{isFunctionOpen ? "▲" : "▼"}</span>
             </button>
 
+            {isFunctionOpen && (
+              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-1  w-[100vw] left-1/2 -translate-x-1/2">
+                <div className="mx-auto max-w-6xl px-6 py-4">
+                  <div className="flex gap-8">
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Inbox</h3>
+                      <p className="text-sm font-normal">
+                        Everything. In one place. Always. Your inbox collects
+                        every mention, comment, deadline, and file update — then
+                        intelligently sorts it all so you see what matters
+                        first. No more chaos. No more missed follow-ups. Just
+                        clarity.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Planner</h3>
+                      <p className="text-sm font-normal">
+                        Your calendar. Supercharged. Sync unlimited calendars,
+                        block deep-focus sessions, and visually map your entire
+                        week in seconds. See time conflicts before they happen.
+                        Allocate hours to what actually moves the needle.
+                        Planner doesn't just track time — it optimizes it.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        Automation
+                      </h3>
+                      <p className="text-sm font-normal">
+                        Set it once. Forget it forever. Automate repetitive
+                        tasks, status changes, assignments, and notifications.
+                        Create custom triggers like "when a task is overdue →
+                        reassign + notify manager." Save hours every single week
+                        without writing a single line of code.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <button
-              onClick={() => setIsSolutionOpen(!isSolutionOpen)}
+              onClick={() => openMenu("solution")}
               className="hover:text-indigo-600 transition-colors cursor-pointer"
             >
               Solution
               <span className="ml-1 text-sm">{isSolutionOpen ? "▲" : "▼"}</span>
             </button>
 
+            {isSolutionOpen && (
+              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-1 w-[100vw] -translate-x-1/2 left-1/2">
+                <div className="mx-auto max-w-6xl px-6 py-4">
+                  <div className="flex gap-8">
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        Personal & Small Teams
+                      </h3>
+                      <p className="text-sm font-normal">
+                        Perfect for freelancers, creators, and small teams.
+                        Organize your daily tasks, track deadlines, and
+                        collaborate without the noise. No complicated setup —
+                        just simple, visual task management that works.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        Remote Work
+                      </h3>
+                      <p className="text-sm font-normal">
+                        Keep everyone aligned, no matter where they are. Assign
+                        tasks, share updates, and monitor progress in real time.
+                        Whether your team is across the table or across the
+                        globe, stay connected and productive.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        Project Management
+                      </h3>
+                      <p className="text-sm font-normal">
+                        From idea to done — faster and cleaner. Break down big
+                        goals into manageable tasks. Set priorities, track
+                        status, and never drop the ball again. Perfect for
+                        launching campaigns, products, or any team project.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <button
-              onClick={() => setIsPlansOpen(!isPlansOpen)}
+              onClick={() => openMenu("plans")}
               className="hover:text-indigo-600 transition-colors cursor-pointer"
             >
               Plans
               <span className="ml-1 text-sm">{isPlansOpen ? "▲" : "▼"}</span>
             </button>
 
+            {isPlansOpen && (
+              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-1 w-[100vw] left-1/2 -translate-x-1/2">
+                <div className="mx-auto max-w-6xl px-6 py-4">
+                  <div className="flex gap-8">
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Standard</h3>
+                      <p className="text-sm font-normal">
+                        For teams that need to manage more work and scale
+                        collaboration.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">Premium</h3>
+                      <p className="text-sm font-normal">
+                        Best for teams of up to 100 people who need to track
+                        multiple projects and visualize work in multiple ways.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        Enterprise
+                      </h3>
+                      <p className="text-sm font-normal">
+                        Everything teams and enterprise administrators need to
+                        manage projects.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <button
-              onClick={() => setIsPricesOpen(!isPricesOpen)}
+              onClick={() => openMenu("prices")}
               className="hover:text-indigo-600 transition-colors cursor-pointer"
             >
               Prices
               <span className="ml-1 text-sm">{isPricesOpen ? "▲" : "▼"}</span>
             </button>
+
+            {isPricesOpen && (
+              <div className="border-b border-gray-200 bg-gray-50 absolute top-full z-1 w-[100vw] left-1/2 -translate-x-1/2">
+                <div className="mx-auto max-w-6xl px-6 py-4">
+                  <div className="flex gap-8">
+                    <div>
+                      <h3 className="font-semibold text-gray-900">FREE</h3>
+                      <p className="text-sm font-normal">
+                        $0 USD Free for up to 10 collaborators per workspace
+                        Gather, organize, and accomplish your tasks.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">STANDARD</h3>
+                      <p className="text-sm font-normal">
+                        $5 USD Per user per month when billed annually ($6
+                        billed monthly) Get more productive with card mirroring,
+                        automation, and unlimited boards.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">PREMIUM</h3>
+                      <p className="text-sm font-normal">
+                        $10 USD Per user per month when billed annually ($12.50
+                        billed monthly) Add AI to your boards and admin controls
+                        to your toolkit. Plus, gain more perspective with
+                        advanced views.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <nav className="flex items-center gap-4">
@@ -65,145 +240,55 @@ export default function Home() {
         </div>
       </header>
 
-      {isFunctionOpen && (
-        <div className="border-b border-gray-200 bg-gray-50">
-          <div className="mx-auto max-w-6xl px-6 py-4">
-            <div className="flex gap-8">
-              <div>
-                <h3 className="font-semibold text-gray-900">Inbox</h3>
-                <p className="text-sm text-gray-600">
-                  Everything. In one place. Always. Your inbox collects every
-                  mention, comment, deadline, and file update — then
-                  intelligently sorts it all so you see what matters first. No
-                  more chaos. No more missed follow-ups. Just clarity.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Planner</h3>
-                <p className="text-sm text-gray-600">
-                  Your calendar. Supercharged. Sync unlimited calendars, block
-                  deep-focus sessions, and visually map your entire week in
-                  seconds. See time conflicts before they happen. Allocate hours
-                  to what actually moves the needle. Planner doesn't just track
-                  time — it optimizes it.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Automation</h3>
-                <p className="text-sm text-gray-600">
-                  Set it once. Forget it forever. Automate repetitive tasks,
-                  status changes, assignments, and notifications. Create custom
-                  triggers like "when a task is overdue → reassign + notify
-                  manager." Save hours every single week without writing a
-                  single line of code.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <section className="mx-auto max-w-6xl px-6 py-20 bg-blue-200">
+        <div>
+          <div>
+            <span>Productivity SaaS</span>
 
-      {isSolutionOpen && (
-        <div className="border-b border-gray-200 bg-gray-50">
-          <div className="mx-auto max-w-6xl px-6 py-4">
-            <div className="flex gap-8">
-              <div>
-                <h3 className="font-semibold text-gray-900">
-                  Personal & Small Teams
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Perfect for freelancers, creators, and small teams. Organize
-                  your daily tasks, track deadlines, and collaborate without the
-                  noise. No complicated setup — just simple, visual task
-                  management that works.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Remote Work</h3>
-                <p className="text-sm text-gray-600">
-                  Keep everyone aligned, no matter where they are. Assign tasks,
-                  share updates, and monitor progress in real time. Whether your
-                  team is across the table or across the globe, stay connected
-                  and productive.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">
-                  Project Management
-                </h3>
-                <p className="text-sm text-gray-600">
-                  From idea to done — faster and cleaner. Break down big goals
-                  into manageable tasks. Set priorities, track status, and never
-                  drop the ball again. Perfect for launching campaigns,
-                  products, or any team project.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+            <h2>Organize your tasks and focus on what matters </h2>
 
-      {isPlansOpen && (
-        <div className="border-b border-gray-200 bg-gray-50">
-          <div className="mx-auto max-w-6xl px-6 py-4">
-            <div className="flex gap-8">
-              <div>
-                <h3 className="font-semibold text-gray-900">Standard</h3>
-                <p className="text-sm text-gray-600">
-                  For teams that need to manage more work and scale
-                  collaboration.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Premium</h3>
-                <p className="text-sm text-gray-600">
-                  Best for teams of up to 100 people who need to track multiple
-                  projects and visualize work in multiple ways.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Enterprise</h3>
-                <p className="text-sm text-gray-600">
-                  Everything teams and enterprise administrators need to manage
-                  projects.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+            <p>
+              A simple and modern task manager to help you stay productive,
+              manage priorities, and keep track of your daily work.
+            </p>
 
-      {isPricesOpen && (
-        <div className="border-b border-gray-200 bg-gray-50">
-          <div className="mx-auto max-w-6xl px-6 py-4">
-            <div className="flex gap-8">
+            <div>
+              <a href="/register">Create Acount</a>
+
+              <a href="/login">Login</a>
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <h3>Dashboard Preview</h3>
+              <span>Active</span>
+            </div>
+
+            <div>
               <div>
-                <h3 className="font-semibold text-gray-900">FREE</h3>
-                <p className="text-sm text-gray-600">
-                  $0 USD Free for up to 10 collaborators per workspace Gather,
-                  organize, and accomplish your tasks.
-                </p>
+                <p>Total Task</p>
+                <p>24</p>
               </div>
+
               <div>
-                <h3 className="font-semibold text-gray-900">STANDARD</h3>
-                <p className="text-sm text-gray-600">
-                  $5 USD Per user per month when billed annually ($6 billed
-                  monthly) Get more productive with card mirroring, automation,
-                  and unlimited boards.
-                </p>
+                <p>Completed</p>
+                <p>16</p>
               </div>
+
               <div>
-                <h3 className="font-semibold text-gray-900">PREMIUM</h3>
-                <p className="text-sm text-gray-600">
-                  $10 USD Per user per month when billed annually ($12.50 billed
-                  monthly) Add AI to your boards and admin controls to your
-                  toolkit. Plus, gain more perspective with advanced views.
-                </p>
+                <p>Pending</p>
+                <p>6</p>
+              </div>
+
+              <div>
+                <p>In Progress</p>
+                <p>2</p>
               </div>
             </div>
           </div>
         </div>
-      )}
+      </section>
     </main>
   );
 }
