@@ -57,7 +57,7 @@ export default function Home() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <h1 className="text-2xl font-bold text-indigo-600">TaskFlow</h1>
 
-          <div className="flex gap-10 font-bold">
+          <div className="hidden lg:flex gap-10 font-bold">
             <button
               onClick={() => openMenu("functions")}
               className="hover:text-indigo-600 transition-colors cursor-pointer"
@@ -290,32 +290,115 @@ export default function Home() {
             </div>
           </div>
 
-          <div>
-            <div>
-              <h3>Dashboard Preview</h3>
-              <span>Active</span>
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-bteween">
+              <h3 className="text-lg font-semibold">Dashboard Preview</h3>
+              <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                Active
+              </span>
             </div>
 
-            <div>
-              <div>
-                <p>Total Task</p>
-                <p>24</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-xl bg-gray-200 p-4">
+                <p className="text-sm text-gray-500">Total Task</p>
+                <p className="mt-2 text-2xl font-bold">24</p>
               </div>
 
-              <div>
-                <p>Completed</p>
-                <p>16</p>
+              <div className="rounded-xl bg-gray-200 p-4">
+                <p className="text-sm text-gray-500">Completed</p>
+                <p className="mt-2 text-2xl font-bold">16</p>
               </div>
 
-              <div>
-                <p>Pending</p>
-                <p>6</p>
+              <div className="rounded-xl bg-gray-200 p-4">
+                <p className="text-sm text-gray-500">Pending</p>
+                <p className="mt-2 text-2xl font-bold">6</p>
               </div>
 
-              <div>
-                <p>In Progress</p>
-                <p>2</p>
+              <div className="rounded-xl bg-gray-200 p-4">
+                <p className="text-sm text-gray-500">In Progress</p>
+                <p className="mt-2 text-2xl font-bold">2</p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-gray-200 bg-white">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="mx-auto mb-12 max-w-2xl text-center">
+            <span className="inline-block rounded-full bg-indigo-100 px-3 py-1 text-sm font-medium text-indigo-700">
+              Features
+            </span>
+
+            <h2 className="mt-4 text-3xl font-bold md:text-4xl">
+              Everything you need to manage your work
+            </h2>
+
+            <p className="mt-4 text-lg text-gray-600">
+              TaskFlow helps you organize your day, track priorities, and keep
+              your workflow clear.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
+              <h3 className="text-xl font-semibold text-gray-900">
+                Task Management
+              </h3>
+              <p className="mt-3 text-gray-600">
+                Create, edit, complete, and organize your tasks with a clean and
+                intuitive interface.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
+              <h3 className="text-xl font-semibold text-gray-900">
+                Smart Organization
+              </h3>
+              <p className="mt-3 text-gray-600 ">
+                Filter tasks by status and priority so you can focus on what
+                matters most.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
+              <h3 className="text-xl font-semibold text-gray-900">
+                Productivity Overview
+              </h3>
+              <p className="mt-3 text-gray-600 ">
+                Get a quick summary of your progress with a simple dashboard
+                built for daily use.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-gray-50">
+        <div className="mx-auto max-w-4xl px-6 py-20">
+          <div className="rounded-3xl bg-indigo-600 px-8 py-12 text-center text-white shadow-lg md:px-12">
+            <h2 className="text-3xl font-bold md:text-4xl">
+              Ready to organize your workflow?
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-indigo-100">
+              Create your account and start managing your tasks with a modern
+              and simple productivity tool.
+            </p>
+
+            <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+              <a
+                href="/register"
+                className="rounded-lg bg-white px-6 py-3 font-medium text-indigo-600 transition hover:bg-gray-200"
+              >
+                Get Started Free
+              </a>
+              <a
+                href="/login"
+                className="rounded-lg border border-indigo-300 px-6 py-3 font-medium text-white transition hover:bg-indigo-500"
+              >
+                Login
+              </a>
             </div>
           </div>
         </div>
