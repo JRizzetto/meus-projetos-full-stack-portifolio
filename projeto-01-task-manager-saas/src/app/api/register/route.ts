@@ -70,9 +70,8 @@ export async function POST(request: Request) {
       },
       { status: 201 },
     );
-  } catch (error) {
+  } catch {
     // 10. Se qualquer erro inesperado acontecer, retorna erro 500
-    console.error(error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 },
