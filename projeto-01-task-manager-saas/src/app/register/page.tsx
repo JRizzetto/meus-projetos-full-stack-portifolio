@@ -13,24 +13,32 @@ export default function registerPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    //* 2 - Impede o navegador de recarregar a página */
     event.preventDefault();
 
+    // 3 - Limpa erro anterior (se existia)
     setErrorMessage("");
     setSuccessMessage("");
 
+    // - 4 Se as senhas forem diferentes lança um erro
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match.");
       return;
     }
 
     try {
+      // Muda botão para "Signing in..."
       setIsLoading(true);
 
+      //*Envia para a URL http://localhost:3000/api/register*/
       const response = await fetch("/api/register", {
+        // Method: "POST" - Método HTTP (criar/processar)
         method: "POST",
+        // headers diz que está enviando JSON
         headers: {
           "Content-Type": "application/json",
         },
+        // Os dados convertidos para JSON
         body: JSON.stringify({
           name,
           email,
@@ -38,15 +46,19 @@ export default function registerPage() {
         }),
       });
 
+      // Guarda a resposta recebida do backend e converte em objeto
       const data = await response.json();
 
+      // Se os dados não forem validados no backend, retorna um erro
       if (!response.ok) {
         setErrorMessage(data.message || "Something went wrong.");
         return;
       }
 
+      // Se os dados forem validados, mostra a mensagem de sucesso
       setSuccessMessage("Account created successfully.");
 
+      // Limpa todos os inputs
       setName("");
       setEmail("");
       setPassword("");
@@ -69,7 +81,8 @@ export default function registerPage() {
             Start organizing your tasks and boost your productivity.
           </p>
         </div>
-
+        {/*1 - Quando o botão Sign In é clicado é disparado onSubimit no formulário
+        e a função handleSubmit é chamada */}
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
             <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -141,7 +154,6 @@ export default function registerPage() {
             {isLoading ? "Creating account..." : "Create account"}
           </button>
         </form>
-
         <p className="mt-6 text-center text-sm text-gray-600">
           Already have an account?
           <a
