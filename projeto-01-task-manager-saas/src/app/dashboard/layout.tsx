@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { LogoutButton } from "@/components/logout-button";
 
 type DashboardLayoutProps = {
   children: ReactNode;
@@ -37,6 +38,8 @@ export default async function DashboardLayout({
             >
               Tasks
             </Link>
+
+            <LogoutButton />
           </nav>
         </aside>
 

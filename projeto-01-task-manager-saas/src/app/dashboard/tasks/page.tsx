@@ -1,41 +1,34 @@
-const tasks = [
-  {
-    id: 1,
-    title: "Finish project documentation",
-    description:
-      "Write the first version of the project specification and flow.",
-    status: "Pending",
-    priority: "High",
-    dueDate: "2026-04-25",
-  },
-  {
-    id: 2,
-    title: "Build login page",
-    description: "Create the login screen and keep the UI consistent.",
-    status: "In Progress",
-    priority: "Medium",
-    dueDate: "2026-04-26",
-  },
-  {
-    id: 3,
-    title: "Create dashboard cards",
-    description:
-      "Add summary cards with mock data for the first dashboard version.",
-    status: "Completed",
-    priority: "Low",
-    dueDate: "2026-04-20",
-  },
-  {
-    id: 4,
-    title: "Plan Prisma models",
-    description: "Define User and Task entities for the database.",
-    status: "Pending",
-    priority: "High",
-    dueDate: "2026-04-28",
-  },
-];
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
+import { CreateTaskForm } from "@/components/create-task-form";
 
-export default function TaskPage() {
+export default async function TaskPage() {
+  const session = await auth();
+
+  if (!session?.user?.email) {
+    redirect("/login");
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user.email,
+    },
+  });
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const tasks = await prisma.task.findMany({
+    where: {
+      userId: user.id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return (
     <section className="space-y-8">
       <div className="flex flex-col gap-4 md: flex-row md:items-center md:justify-between">
@@ -74,6 +67,8 @@ export default function TaskPage() {
       </div>
 
       <div className="space-y-4">
+        <CreateTaskForm />
+
         {tasks.map((task) => (
           <article
             key={task.id}
@@ -84,7 +79,9 @@ export default function TaskPage() {
                 <h2 className="text-xl font-semibold text-gray-900">
                   {task.title}
                 </h2>
-                <p className="mt-2 text-gray-600">{task.description}</p>
+                <p className="mt-2 text-gray-600">
+                  {task.description ?? "No description"}
+                </p>
 
                 <div className="mt-4 flex flex-wrap gap-3">
                   <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
@@ -94,7 +91,10 @@ export default function TaskPage() {
                     {task.priority}
                   </span>
                   <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
-                    Due: {task.dueDate}
+                    Due:{" "}
+                    {task.dueDate
+                      ? task.dueDate.toISOString().split("T")[0]
+                      : "No due date"}
                   </span>
                 </div>
               </div>
