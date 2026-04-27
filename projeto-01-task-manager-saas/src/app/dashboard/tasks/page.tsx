@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { CreateTaskForm } from "@/components/create-task-form";
+import { DeleteTaskButton } from "@/components/delete-task-button";
 
 export default async function TaskPage() {
   const session = await auth();
@@ -103,9 +104,7 @@ export default async function TaskPage() {
                 <button className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100">
                   Edit
                 </button>
-                <button className="rounded-lg border border-red-200 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50">
-                  Delete
-                </button>
+                <DeleteTaskButton taskId={task.id} />
                 <button className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700">
                   Complete
                 </button>
