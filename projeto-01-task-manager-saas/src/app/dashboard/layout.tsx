@@ -1,11 +1,21 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 type DashboardLayoutProps = {
   children: ReactNode;
 };
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default async function DashboardLayout({
+  children,
+}: DashboardLayoutProps) {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/login");
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen text-gray-900">
       <div className="flex min-h-screen">

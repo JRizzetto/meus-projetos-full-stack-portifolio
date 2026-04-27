@@ -1,3 +1,6 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+
 const summaryCards = [
   {
     title: "Total Tasks",
@@ -44,7 +47,13 @@ const recentTasks = [
   },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/login");
+  }
+
   return (
     <section className="space-y-8">
       <div>

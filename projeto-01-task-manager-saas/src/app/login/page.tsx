@@ -63,6 +63,7 @@ export default function LoginPage() {
       }
 
       router.push("/dashboard");
+      router.refresh();
     } catch {
       setErrorMessage("Unable to login. Pelase try agin.");
     } finally {
