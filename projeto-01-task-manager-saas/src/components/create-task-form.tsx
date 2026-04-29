@@ -104,7 +104,7 @@ export function CreateTaskForm() {
       <button
         type="submit"
         disabled={isLoading}
-        className="mt-6 rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70"
+        className="mt-6 rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer"
       >
         {isLoading ? "Creating..." : "Create Task"}
       </button>

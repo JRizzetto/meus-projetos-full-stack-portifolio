@@ -17,6 +17,8 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  const userName = session.user?.name ?? "User";
+
   return (
     <div className="bg-gray-50 min-h-screen text-gray-900">
       <div className="flex min-h-screen">
@@ -50,7 +52,7 @@ export default async function DashboardLayout({
                 Welcome back
               </h2>
               <div className="rounded-full bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700">
-                Jefferson
+                {userName}
               </div>
             </div>
           </header>

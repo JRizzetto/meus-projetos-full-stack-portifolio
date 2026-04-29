@@ -1,58 +1,70 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-
-const summaryCards = [
-  {
-    title: "Total Tasks",
-    value: 24,
-  },
-  {
-    title: "Completed",
-    value: 16,
-  },
-  {
-    title: "Pending",
-    value: 6,
-  },
-  {
-    title: "In Progress",
-    value: 2,
-  },
-];
-
-const recentTasks = [
-  {
-    id: 1,
-    title: "Finish landing page",
-    status: "Completed",
-    priority: "High",
-  },
-  {
-    id: 2,
-    title: "Create login screen",
-    status: "In Progress",
-    priority: "Medium",
-  },
-  {
-    id: 3,
-    title: "Plan database models",
-    status: "Pending",
-    priority: "High",
-  },
-  {
-    id: 4,
-    title: "Write project documentation",
-    status: "Completed",
-    priority: "Low",
-  },
-];
+import { prisma } from "@/lib/prisma";
 
 export default async function DashboardPage() {
   const session = await auth();
 
-  if (!session) {
+  if (!session?.user?.email) {
     redirect("/login");
   }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user.email,
+    },
+  });
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const [totalTasks, completedTasks, pendingTasks, inProgressTasks, title] =
+    await Promise.all([
+      prisma.task.count({
+        where: { userId: user.id },
+      }),
+      prisma.task.count({
+        where: { userId: user.id, status: "COMPLETED" },
+      }),
+      prisma.task.count({
+        where: { userId: user.id, status: "PENDING" },
+      }),
+      prisma.task.count({
+        where: { userId: user.id, status: "IN_PROGRESS" },
+      }),
+      prisma.task.count({
+        where: { userId: user.id },
+      }),
+    ]);
+
+  const summaryCards = [
+    {
+      title: "Total tasks",
+      value: totalTasks,
+    },
+    {
+      title: "Completed",
+      value: completedTasks,
+    },
+    {
+      title: "Pending",
+      value: pendingTasks,
+    },
+    {
+      title: "In Progress",
+      value: inProgressTasks,
+    },
+  ];
+
+  const recentTasks = await prisma.task.findMany({
+    where: {
+      userId: user.id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   return (
     <section className="space-y-8">

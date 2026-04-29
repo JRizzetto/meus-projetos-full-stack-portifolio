@@ -293,7 +293,7 @@ export default function Home() {
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="mb-4 flex items-center justify-bteween">
               <h3 className="text-lg font-semibold">Dashboard Preview</h3>
-              <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+              <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700 ml-1">
                 Active
               </span>
             </div>

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function registerPage() {
   const [name, setName] = useState("");
@@ -11,6 +13,8 @@ export default function registerPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     //* 2 - Impede o navegador de recarregar a página */
@@ -63,6 +67,8 @@ export default function registerPage() {
       setEmail("");
       setPassword("");
       setConfirmPassword("");
+
+      router.push("/login");
     } catch {
       setErrorMessage("Unable to register. Please try again.");
     } finally {
@@ -162,6 +168,15 @@ export default function registerPage() {
           >
             Sign in
           </a>
+        </p>
+        <p className="mt-6 text-center text-sm text-gray-600">
+          or return to{" "}
+          <Link
+            href="/"
+            className="rounded-2xl bg-gray-200 px-2 text-indigo-600 font-medium"
+          >
+            Home
+          </Link>
         </p>
       </div>
     </main>

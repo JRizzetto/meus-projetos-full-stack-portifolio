@@ -21,7 +21,10 @@ Explicação das pastas
 - system-flow.md
 - project-spec.md
 
-## 🔄 Status
+## 🔄 Deploy
+
+- Neon
+- vercel
 
 🚀 Task Manager SaaS
 Uma aplicação de gerenciamento de tarefas full stack desenvolvida para simular um produto SaaS do mundo real.

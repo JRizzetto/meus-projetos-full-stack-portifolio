@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -138,6 +139,15 @@ export default function LoginPage() {
           >
             Create one
           </a>
+        </p>
+        <p className="mt-6 text-center text-sm text-gray-600">
+          or return to{" "}
+          <Link
+            href="/"
+            className="rounded-2xl bg-gray-200 px-2 text-indigo-600 font-medium"
+          >
+            Home
+          </Link>
         </p>
       </div>
     </main>
