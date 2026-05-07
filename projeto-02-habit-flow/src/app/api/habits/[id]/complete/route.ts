@@ -31,7 +31,7 @@ export async function POST(request: Request, { params }: Params) {
   const habit = await prisma.habit.findFirst({
     where: {
       id,
-      userid: user.id,
+      userId: user.id,
     },
   });
 
