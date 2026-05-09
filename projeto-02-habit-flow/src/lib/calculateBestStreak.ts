@@ -11,10 +11,8 @@ export function calculateBestStreak(completions: { date: Date }[]) {
     })
     .sort((a, b) => a - b);
 
-  console.log(timestamps);
-
   let bestStreak = 1;
-  let currentStrek = 1;
+  let currentStreak = 1;
 
   for (let i = 1; i < timestamps.length; i++) {
     const previousDate = new Date(timestamps[i - 1]);
@@ -23,10 +21,10 @@ export function calculateBestStreak(completions: { date: Date }[]) {
     previousDate.setDate(previousDate.getDate() + 1);
 
     if (previousDate.getTime() === currentDate.getTime()) {
-      currentStrek++;
-      bestStreak = Math.max(bestStreak, currentStrek);
+      currentStreak++;
+      bestStreak = Math.max(bestStreak, currentStreak);
     } else {
-      currentStrek = 1;
+      currentStreak = 1;
     }
   }
 

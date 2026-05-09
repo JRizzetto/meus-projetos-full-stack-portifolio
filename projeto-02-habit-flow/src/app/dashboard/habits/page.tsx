@@ -6,6 +6,8 @@ import { prisma } from "@/lib/prisma";
 import CompleteHabitButton from "@/components/CompleteHabitButton";
 import { calculateStreak } from "@/lib/calculateStreak";
 import { calculateBestStreak } from "@/lib/calculateBestStreak";
+import DeleteHabitButton from "@/components/DeleteHabitButton";
+import EditHabitForm from "@/components/EditHabitForm";
 
 export default async function HabitsPage() {
   const session = await getServerSession(authOptions);
@@ -98,6 +100,14 @@ export default async function HabitsPage() {
                 <CompleteHabitButton
                   habitId={habit.id}
                   isCompletedToday={isCompletedToday}
+                />
+
+                <DeleteHabitButton habitId={habit.id} />
+                <EditHabitForm
+                  habitId={habit.id}
+                  initialTitle={habit.title}
+                  initialDescription={habit.description}
+                  initialColor={habit.color}
                 />
               </div>
 

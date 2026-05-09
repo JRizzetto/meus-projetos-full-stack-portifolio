@@ -5,3 +5,5 @@ export const createHabitSchema = z.object({
   description: z.string().optional(),
   color: z.string().optional(),
 });
+
+export const updateHabitSchema = createHabitSchema.partial();
