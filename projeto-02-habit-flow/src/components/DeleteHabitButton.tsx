@@ -30,7 +30,7 @@ export default function DeleteHabitButton({ habitId }: DeleteHabitButtonProps) {
   return (
     <button
       onClick={handleDeleteHabit}
-      className="rounded bg-red-600 px-3 py-2 text-sm text-white ml-2 cursor-pointer"
+      className="rounded-xl bg-red-50 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-100 cursor-pointer"
     >
       Delete
     </button>

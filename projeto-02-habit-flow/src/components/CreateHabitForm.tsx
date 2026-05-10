@@ -43,25 +43,25 @@ export default function CreateHabitForm() {
   return (
     <form
       onSubmit={handleCreateHabit}
-      className="mt-6 flex max-w-md flex-col gap-4"
+      className="mt-5 grid gap-4 md:grid-cols-3"
     >
       <input
         type="text"
         placeholder="Habit title"
-        className="rounded border p-2"
+        className="rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
 
       <textarea
         placeholder="Description"
-        className="rounded border p-2"
+        className="rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 md:col-span-3"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       ></textarea>
 
       <select
-        className="rounded border p-2"
+        className="rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
         value={color}
         onChange={(e) => setColor(e.target.value)}
       >
@@ -74,7 +74,7 @@ export default function CreateHabitForm() {
 
       <button
         type="submit"
-        className="rounded bg-indigo-600 p-2 text-white cursor-pointer"
+        className="rounded-xl bg-indigo-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 cursor-pointer"
       >
         Create Habit
       </button>

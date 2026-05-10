@@ -26,7 +26,11 @@ export default function CompleteHabitButton({
   return (
     <button
       onClick={handleCompleteHabit}
-      className={`rounded px-3 py-2 text-sm text-white cursor-pointer ${isCompletedToday ? "bg-gray-500" : "bg-green-600"}`}
+      className={`rounded-xl px-4 py-2 text-sm font-medium transition cursor-pointer ${
+        isCompletedToday
+          ? "bg-slate-100 text-slate-700 hover:bg-slate-200"
+          : "bg-green-600 text-white hover:bg-green-700"
+      }`}
     >
       {isCompletedToday ? "Completed today" : "Complete today"}
     </button>

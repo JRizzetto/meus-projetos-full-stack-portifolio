@@ -48,7 +48,7 @@ export default function EditHabitForm({
     return (
       <button
         onClick={() => setIsEditing(true)}
-        className="rounded bg-blue-600 px-3 py-2 text-sm text-white ml-2 cursor-pointer"
+        className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 cursor-pointer"
       >
         Edit
       </button>
@@ -81,14 +81,14 @@ export default function EditHabitForm({
         <option value="yellow">Yellow</option>
       </select>
 
-      <button className="rounded bg-blue-600 px-3 py-2 text-sm text-white cursor-pointer">
+      <button className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700">
         Save changes
       </button>
 
       <button
         type="button"
         onClick={() => setIsEditing(false)}
-        className="rounded bg-blue-600 px-3 py-2 text-sm text-white cursor-pointer"
+        className="rounded-xl border px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
       >
         Cancel
       </button>

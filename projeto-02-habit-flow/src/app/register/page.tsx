@@ -39,6 +39,14 @@ export default function RegisterPage() {
         <h1 className="text-2xl font-bold">Create account</h1>
 
         <input
+          type="text"
+          placeholder="Name"
+          className="rounded border p-2"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+
+        <input
           type="email"
           placeholder="Email"
           className="rounded border p-2"
@@ -54,7 +62,7 @@ export default function RegisterPage() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="rounded bg-indigo-600 p-2 text-white">
+        <button className="rounded bg-indigo-600 p-2 text-white cursor-pointer">
           Register
         </button>
       </form>

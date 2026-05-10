@@ -3,11 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import CompleteHabitButton from "@/components/CompleteHabitButton";
 import { calculateStreak } from "@/lib/calculateStreak";
 import { calculateBestStreak } from "@/lib/calculateBestStreak";
-import DeleteHabitButton from "@/components/DeleteHabitButton";
-import EditHabitForm from "@/components/EditHabitForm";
+import HabitCard from "@/components/HabitCard";
+import DashboardStats from "@/components/DashboardStats";
 
 export default async function HabitsPage() {
   const session = await getServerSession(authOptions);
@@ -54,73 +53,67 @@ export default async function HabitsPage() {
     totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold">Habis</h1>
-
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border p-4 shadow-sm">
-          <p className="text-sm text-gray-500">Total habits</p>
-          <strong className="text-2xl">{totalHabits}</strong>
+    <main className="px-6 py-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8">
+          <p className="text-sm font-medium text-indigo-600">HabitFlow</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+            Your habits
+          </h1>
+          <p className="mt-2 text-slate-600">
+            Track your daily progress, build consistency, and improve your
+            routine.
+          </p>
         </div>
 
-        <div className="rounded-lg border p-4 shadow-sm">
-          <p className="text-sm text-gray-500">Completed today</p>
-          <strong className="text-2xl">{completedToday}</strong>
-        </div>
+        <DashboardStats
+          totalHabits={totalHabits}
+          completedToday={completedToday}
+          completionPercentage={completionPercentage}
+        />
 
-        <div className="rounded-lg border p-4 shadow-sm">
-          <p className="text-sm text-gray-500">Completion</p>
-          <strong className="text-2xl">{completionPercentage}%</strong>
-        </div>
-      </div>
+        <section className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-slate-900">
+            Create a new habit
+          </h2>
 
-      <CreateHabitForm />
+          <CreateHabitForm />
+        </section>
 
-      <div className="mt-8 flex flex-col gap-4">
-        {habits.map((habit) => {
-          const isCompletedToday = habit.completions.some((completion) => {
-            const completionDate = new Date(completion.date);
-            completionDate.setHours(0, 0, 0, 0);
+        {habits.length === 0 ? (
+          <div className="mt-8 rounded-2xl border border-dashed bg-white p-8 text-center">
+            <h2 className="text-lg font-semibold text-slate-900">
+              No habits yet
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              Create your first habit to start tracking your progress.
+            </p>
+          </div>
+        ) : (
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            {habits.map((habit) => {
+              const isCompletedToday = habit.completions.some((completion) => {
+                const completionDate = new Date(completion.date);
+                completionDate.setHours(0, 0, 0, 0);
 
-            return completionDate.getTime() === today.getTime();
-          });
+                return completionDate.getTime() === today.getTime();
+              });
 
-          const currentStreak = calculateStreak(habit.completions);
-          const bestStreak = calculateBestStreak(habit.completions);
+              const currentStreak = calculateStreak(habit.completions);
+              const bestStreak = calculateBestStreak(habit.completions);
 
-          return (
-            <div key={habit.id} className="rounded-lg border p-4 shadow-sm">
-              <h2 className="font-semibold">{habit.title}</h2>
-
-              {habit.description && (
-                <p className="text-sm text-gray-600">{habit.description}</p>
-              )}
-
-              <div className="mt-4">
-                <CompleteHabitButton
-                  habitId={habit.id}
+              return (
+                <HabitCard
+                  key={habit.id}
+                  habit={habit}
                   isCompletedToday={isCompletedToday}
+                  currentStreak={currentStreak}
+                  bestStreak={bestStreak}
                 />
-
-                <DeleteHabitButton habitId={habit.id} />
-                <EditHabitForm
-                  habitId={habit.id}
-                  initialTitle={habit.title}
-                  initialDescription={habit.description}
-                  initialColor={habit.color}
-                />
-              </div>
-
-              <p className="mt-2 text-sm text-gray-500">
-                Current Streak: {currentStreak} days
-              </p>
-
-              <p className="text-sm text-gray-500">
-                Best streak: {bestStreak} days
-              </p>
-            </div>
-          );
-        })}
+              );
+            })}
+          </div>
+        )}
       </div>
     </main>
   );
