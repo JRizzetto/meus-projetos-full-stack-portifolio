@@ -23,12 +23,32 @@ export default function HabitCard({
   currentStreak,
   bestStreak,
 }: HabitCardProps) {
+  const colorClasses = {
+    indigo: "bg-indigo-600",
+    green: "bg-green-600",
+    red: "bg-red-600",
+    yellow: "bg-yellow-500",
+  };
+
+  const colorClassesFinished = {
+    indigo: "bg-indigo-100",
+    green: "bg-green-100",
+    red: "bg-red-100",
+    yellow: "bg-yellow-100",
+  };
+
+  const habitColor =
+    colorClasses[habit.color as keyof typeof colorClasses] ?? "bg-indigo-600";
+
+  colorClassesFinished[habit.color as keyof typeof colorClassesFinished] ??
+    "bg-slate-100";
+
   return (
     <div className="rounded-2xl border bg-white p-5 shadow-sm transition hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-indigo-600" />
+            <span className={`h-3 w-3 rounded-full ${habitColor}`} />
             <h2 className="text-lg font-semibold text-slate-900">
               {habit.title}
             </h2>
@@ -42,7 +62,7 @@ export default function HabitCard({
         </div>
 
         <span
-          className={`rounded-full px-3 py-1 text-xs font-medium ${isCompletedToday ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"}`}
+          className={`rounded-full px-3 py-1 text-xs font-medium ${isCompletedToday ? colorClassesFinished : "bg-slate-100 text-slate-600"}`}
         >
           {isCompletedToday ? "Done today" : "Pending"}
         </span>

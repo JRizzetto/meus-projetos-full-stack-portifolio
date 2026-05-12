@@ -42,6 +42,8 @@ export default function EditHabitForm({
     if (response.ok) {
       router.refresh();
     }
+
+    setIsEditing(false);
   }
 
   if (!isEditing) {
@@ -81,14 +83,14 @@ export default function EditHabitForm({
         <option value="yellow">Yellow</option>
       </select>
 
-      <button className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700">
+      <button className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 cursor-pointer">
         Save changes
       </button>
 
       <button
         type="button"
         onClick={() => setIsEditing(false)}
-        className="rounded-xl border px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+        className="rounded-xl border px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 cursor-pointer"
       >
         Cancel
       </button>
