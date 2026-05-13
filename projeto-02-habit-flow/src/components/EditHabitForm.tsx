@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 type EditHabitFormProps = {
   habitId: string;
@@ -23,9 +24,11 @@ export default function EditHabitForm({
   const [color, setColor] = useState(initialColor ?? "");
 
   const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   async function handleUpdateHabit(e: React.FormEvent) {
     e.preventDefault();
+    setSaving(true);
 
     const response = await fetch(`/api/habits/${habitId}`, {
       method: "PUT",
@@ -40,10 +43,14 @@ export default function EditHabitForm({
     });
 
     if (response.ok) {
+      toast.success("Habit edited successfully!");
       router.refresh();
+    } else {
+      toast.error("Failed to edit habit");
     }
 
     setIsEditing(false);
+    setSaving(false);
   }
 
   if (!isEditing) {
@@ -84,7 +91,7 @@ export default function EditHabitForm({
       </select>
 
       <button className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 cursor-pointer">
-        Save changes
+        {saving ? "Saving..." : "Save changes"}
       </button>
 
       <button

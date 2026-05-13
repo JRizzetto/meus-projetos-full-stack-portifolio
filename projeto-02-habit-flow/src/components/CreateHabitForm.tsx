@@ -2,16 +2,20 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 export default function CreateHabitForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [color, setColor] = useState("");
 
+  const [creating, setCreating] = useState(false);
+
   const router = useRouter();
 
   async function handleCreateHabit(e: React.FormEvent) {
     e.preventDefault();
+    setCreating(true);
 
     try {
       const response = await fetch("/api/habits", {
@@ -29,6 +33,7 @@ export default function CreateHabitForm() {
       const data = await response.json();
 
       if (response.ok) {
+        toast.success("Habit created successfully!");
         setTitle("");
         setDescription("");
         setColor("");
@@ -37,13 +42,16 @@ export default function CreateHabitForm() {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Failed to create habit");
     }
+
+    setCreating(false);
   }
 
   return (
     <form
       onSubmit={handleCreateHabit}
-      className="mt-5 grid gap-4 md:grid-cols-3"
+      className="mt-5 grid gap-4 lg:grid-cols-3"
     >
       <input
         type="text"
@@ -76,7 +84,7 @@ export default function CreateHabitForm() {
         type="submit"
         className="rounded-xl bg-indigo-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 cursor-pointer"
       >
-        Create Habit
+        {creating ? "Creating..." : "Create Habit"}
       </button>
     </form>
   );

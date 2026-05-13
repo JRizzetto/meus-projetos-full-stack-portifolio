@@ -12,8 +12,11 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [loging, setLoging] = useState(false);
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
+    setLoging(true);
 
     const result = await signIn("credentials", {
       email,
@@ -24,6 +27,8 @@ export default function LoginPage() {
     if (result?.ok) {
       router.push("/dashboard");
     }
+
+    setLoging(false);
   }
 
   return (
@@ -58,7 +63,7 @@ export default function LoginPage() {
           />
 
           <button className="rounded-xl bg-indigo-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 cursor-pointer">
-            Login
+            {loging ? "loging..." : "Login"}
           </button>
         </form>
 

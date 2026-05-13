@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 type CompleteHabitButtonProps = {
   habitId: string;
@@ -13,14 +15,22 @@ export default function CompleteHabitButton({
 }: CompleteHabitButtonProps) {
   const router = useRouter();
 
+  const [completing, setCompleting] = useState(false);
+
   async function handleCompleteHabit() {
+    setCompleting(true);
     const response = await fetch(`/api/habits/${habitId}/complete`, {
       method: "POST",
     });
 
     if (response.ok) {
+      toast.success("Habit completed successfully!");
       router.refresh();
+    } else {
+      toast.error("Failed to complet habit");
     }
+
+    setCompleting(false);
   }
 
   return (
@@ -32,7 +42,9 @@ export default function CompleteHabitButton({
           : "bg-green-600 text-white hover:bg-green-700"
       }`}
     >
-      {isCompletedToday ? "Completed today" : "Complete today"}
+      {completing && "Completing..."}
+      {!completing && isCompletedToday && "Completed Today"}
+      {!completing && !isCompletedToday && "Complete Today"}
     </button>
   );
 }

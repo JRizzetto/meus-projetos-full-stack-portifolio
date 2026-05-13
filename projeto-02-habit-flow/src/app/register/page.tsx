@@ -11,8 +11,11 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [registering, setRegistering] = useState(false);
+
   async function handleResgister(e: React.FormEvent) {
     e.preventDefault();
+    setRegistering(true);
 
     const response = await fetch("/api/register", {
       method: "POST",
@@ -29,6 +32,8 @@ export default function RegisterPage() {
     if (response.ok) {
       router.push("/login");
     }
+
+    setRegistering(false);
   }
 
   return (
@@ -77,7 +82,7 @@ export default function RegisterPage() {
           />
 
           <button className="rounded-xl bg-indigo-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 cursor-pointer">
-            Register
+            {registering ? "Registering..." : "Register"}
           </button>
         </form>
 

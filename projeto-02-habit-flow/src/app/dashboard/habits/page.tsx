@@ -7,6 +7,7 @@ import { calculateStreak } from "@/lib/calculateStreak";
 import { calculateBestStreak } from "@/lib/calculateBestStreak";
 import HabitCard from "@/components/HabitCard";
 import DashboardStats from "@/components/DashboardStats";
+import { Toaster } from "react-hot-toast";
 
 export default async function HabitsPage() {
   const session = await getServerSession(authOptions);
@@ -53,7 +54,7 @@ export default async function HabitsPage() {
     totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
   return (
-    <main className="px-6 py-8">
+    <main className="px-4 py-6 sm:px-6 sm:py-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8">
           <p className="text-sm font-medium text-indigo-600">HabitFlow</p>
@@ -71,6 +72,7 @@ export default async function HabitsPage() {
           completedToday={completedToday}
           completionPercentage={completionPercentage}
         />
+        <Toaster position="top-right" />
 
         <section className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-900">
@@ -90,7 +92,7 @@ export default async function HabitsPage() {
             </p>
           </div>
         ) : (
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
+          <div className="mt-8 grid gap-4 lg:grid-cols-2">
             {habits.map((habit) => {
               const isCompletedToday = habit.completions.some((completion) => {
                 const completionDate = new Date(completion.date);

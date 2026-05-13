@@ -49,7 +49,7 @@ export default async function DashboardPage() {
     totalHabits > 0 ? Math.round((completedToday / totalHabits) * 100) : 0;
 
   return (
-    <main className="px-6 py-8">
+    <main className="px-4 py-6 sm:px-6 sm:py-8">
       <div className="mx-auto max-w-5xl">
         <p className="text-sm font-medium text-indigo-600">HabitFlow</p>
 
@@ -68,7 +68,7 @@ export default async function DashboardPage() {
         />
 
         <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
-          <div className="flex items-center justify-between">
+          <div className="mt-8 grid gap-6 xl:grid-cols-2">
             <div>
               <h2 className="text-lg font-semibold text-slate-9900">
                 Today's progress

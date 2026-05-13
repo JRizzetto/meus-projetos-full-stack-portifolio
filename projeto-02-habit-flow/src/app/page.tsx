@@ -4,12 +4,12 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-50">
       <header className="border-b bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <Link href="/" className="text-lg font-bold text-indigo-600">
             HabitFlow
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link
               href="/login"
               className="text-sm font-medium text-slate-700 hover:text-indigo-600"
@@ -18,7 +18,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/register"
-              className="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+              className="rounded-xl bg-indigo-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 sm:px-4"
             >
               Get started
             </Link>
@@ -26,15 +26,15 @@ export default function HomePage() {
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center">
+      <section className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 sm:py-20 md:grid-cols-2 md:items-center">
         <div>
           <p className="text-sm font-medium text-indigo-600">
             Habit tracking made simple
           </p>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
+          <h1 className="mt-4 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
             Build better habits with progress you can actually see.
           </h1>
-          <p className="mt-6 text-lg leading-8 text-slate-600">
+          <p className="mt-6 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
             Create habits, complete them daily, track your consistency, and
             visualize your progress with a clean dashboard.
           </p>
@@ -55,7 +55,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="rounded-3xl border bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border bg-white p-4 shadow-sm sm:p-6">
           <div className="rounded-2xl bg-slate-50 p-5">
             <p className="text-sm font-medium text-slate-500">
               Today&apos;s progress
@@ -95,7 +95,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-t bg-white px-6 py-20">
+      <section className="border-t bg-white px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <p className="text-sm font-medium text-indigo-600">
@@ -112,7 +112,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-2xl border bg-slate-50 p-6">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-100 text-indigo-700">
                 ✓
@@ -159,7 +159,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-slate-50 px-6 py-20">
+      <section className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-2 md:items-center">
           <div>
             <p className="text-sm font-medium text-indigo-600">
@@ -176,7 +176,7 @@ export default function HomePage() {
               time.
             </p>
 
-            <div className="mt-6 grid gap-3">
+            <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-center">
               <div className="rounded-xl border bg-white p-4">
                 <p className="text-sm font-medium text-slate-900">
                   Daily completion chart
@@ -248,7 +248,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-t bg-white px-6 py-20">
+      <section className="border-t bg-white px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <p className="text-sm font-medium text-indigo-600">
@@ -328,6 +328,59 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <section className="mx-auto max-w-4xl rounded-3xl bg-indigo-600 px-6 py-12 text-center text-white shadow-lg sm:px-8 sm:py-16">
+        <div className="mx-auto max-w-4xl rounded-3xl bg-indigo-600 px-8 py-16 text-center text-white shwdow-lg">
+          <p className="text-sm font-medium text-indigo-200">Start today</p>
+
+          <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+            Build better habits with HabitFlow.
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-indigo-100 sm:text-lg sm:leading-8">
+            Track your progress, stay consistent, and visualize your daily
+            routine with a clean and modern dashboard experience.
+          </p>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/register"
+              className="rounded-xl bg-white px-6 py-3 text-sm font-medium text-indigo-700 transition hover:bg-indigo-50"
+            >
+              Get started for free
+            </Link>
+            <Link
+              href="/login"
+              className="rounded-xl border border-indigo-400 px-6 py-3 text-sm font-medium text-white transition hover:bg-indigo-500"
+            >
+              Sign in
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <footer className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between text-center gap-4 md:flex-row">
+          <div>
+            <p className="text-lg font-bold text-indigo-600">HabitFlow</p>
+            <p className="mt-1 text-sm text-slate-500">
+              Build consistency one day at a time.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-6 text-sm text-slate-500">
+            <Link href="/" className="hover:text-indigo-600">
+              Home
+            </Link>
+            <Link href="/login" className="hover:text-indigo-600">
+              Login
+            </Link>
+            <Link href="/register" className="hover:text-indigo-600">
+              Register
+            </Link>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
