@@ -31,16 +31,17 @@ export default function HabitCard({
   };
 
   const colorClassesFinished = {
-    indigo: "bg-indigo-100",
-    green: "bg-green-100",
-    red: "bg-red-100",
-    yellow: "bg-yellow-100",
+    indigo: "bg-indigo-100 text-indigo-700",
+    green: "bg-green-100 text-green-700",
+    red: "bg-red-100 text-red-700",
+    yellow: "bg-yellow-100 text-yellow-700",
   };
 
   const habitColor =
     colorClasses[habit.color as keyof typeof colorClasses] ?? "bg-indigo-600";
 
-  colorClassesFinished[habit.color as keyof typeof colorClassesFinished] ??
+  const completedBadgeColor =
+    colorClassesFinished[habit.color as keyof typeof colorClassesFinished] ??
     "bg-slate-100";
 
   return (
@@ -62,7 +63,7 @@ export default function HabitCard({
         </div>
 
         <span
-          className={`rounded-full px-3 py-1 text-xs font-medium ${isCompletedToday ? colorClassesFinished : "bg-slate-100 text-slate-600"}`}
+          className={`rounded-full px-3 py-1 text-xs font-medium text-center ${isCompletedToday ? completedBadgeColor : "bg-slate-100 text-slate-600"}`}
         >
           {isCompletedToday ? "Done today" : "Pending"}
         </span>
