@@ -1,87 +1,133 @@
-# TaskFlow - Task Manager SaaS
+# 🚀 TaskFlow — Task Manager SaaS
 
-## 📌 Sobre o projeto
+A modern Full Stack task management application built to simulate a real-world SaaS product.
 
-Descrição breve
+TaskFlow allows users to securely register, authenticate and manage their own tasks through a clean and responsive interface.
 
-## 🚀 Tecnologias
+This project was developed as part of my journey transitioning into software development, focusing on modern architecture, authentication flows, database modeling and scalable Full Stack practices.
 
+---
+
+# ✨ Features
+
+## 🔐 Authentication
+- User registration with validation
+- Secure login with hashed passwords
+- Session management with NextAuth
+- Protected routes
+
+## 📋 Task Management (CRUD)
+- Create tasks
+- View tasks by authenticated user
+- Update task details and status
+- Delete tasks
+
+## 🧠 Architecture
+- Full Stack application using Next.js App Router
+- API Route Handlers for backend logic
+- Prisma ORM for database access
+- Authentication handled with NextAuth
+- Relational database modeling with PostgreSQL
+
+---
+
+# 🔄 Application Flow
+
+```txt
+User Registration
+↓
+Data Validation (Zod)
+↓
+Password Hashing (bcryptjs)
+↓
+Authentication with NextAuth
+↓
+Protected Dashboard Access
+↓
+Task CRUD Operations
+```
+
+---
+
+# 🛠️ Tech Stack
+
+## Frontend
 - Next.js
+- React
 - TypeScript
-- Prisma
-- PostgreSQL
+- Tailwind CSS
 
-## 📂 Estrutura
+## Backend
+- Next.js Route Handlers
+- Prisma ORM
+- PostgreSQL (Neon)
+- NextAuth
+- Zod
+- bcryptjs
 
-Explicação das pastas
+## Deployment
+- Vercel
+- Neon Database
 
-## 📖 Documentação
+---
 
-- project-map.md
-- system-flow.md
-- project-spec.md
+# 📂 Project Structure
 
-## 🔄 Deploy
+```txt
+src/
+ ├── app/
+ ├── components/
+ ├── lib/
+ ├── generated/
+ └── prisma/
+```
 
-- Neon
-- vercel
+---
 
-🚀 Task Manager SaaS
-Uma aplicação de gerenciamento de tarefas full stack desenvolvida para simular um produto SaaS do mundo real.
+# 📖 Documentation
 
-📌 Visão Geral
-Este projeto permite que usuários se registrem, autentiquem-se de forma segura e gerenciem suas próprias tarefas.
+This project includes additional planning and architecture documentation:
 
-Construído como parte da minha jornada para me tornar um desenvolvedor de software profissional, com foco em arquitetura do mundo real e melhores práticas.
+- `project-map.md`
+- `system-flow.md`
+- `project-spec.md`
 
-🛠️ Tecnologias Utilizadas
-Next.js (App Router)
-TypeScript
-Tailwind CSS
-Prisma ORM
-PostgreSQL (Neon)
-Auth.js (NextAuth)
-Zod (validação)
-bcryptjs (hash de senhas)
+---
 
-✨ Funcionalidades
-🔐 Autenticação
-Registro de usuário com validação
-Login seguro com senhas com hash
-Gerenciamento de sessão com Auth.js
-Rotas protegidas
+# 🎯 Purpose
 
-📋 Gerenciamento de Tarefas (CRUD)
-Criar tarefas
-Visualizar tarefas (por usuário)
-Atualizar tarefas (status e detalhes)
-Excluir tarefas
+This project demonstrates:
 
-🧠 Arquitetura
-Aplicação full stack usando Next.js App Router
-Rotas de API para gerenciar a lógica do backend
-Prisma para acesso ao banco de dados
-Autenticação gerenciada via Auth.js
+- Full Stack development skills
+- Authentication flow implementation
+- Database modeling and relationships
+- API design and validation
+- Modern Next.js architecture
+- Scalable project organization
+- Responsive SaaS UI development
 
-🔄 Fluxo
-Usuário se registra (dados validados + senha com hash)
-Usuário faz login (credenciais verificadas)
-Sessão é criada (JWT)
-Usuário acessa o dashboard protegido
-Usuário gerencia tarefas (operações CRUD)
+---
 
-🚧 Melhorias Futuras
-Melhorias na UI/UX
-Filtros e busca de tarefas
-Melhores estados de carregamento e feedback
+# 🚧 Future Improvements
 
-🎯 Propósito
-Este projeto demonstra:
-Habilidades de desenvolvimento full stack
-Implementação de fluxo de autenticação
-Modelagem de banco de dados e relacionamentos
-Design de API e validação
-Arquitetura limpa e escalável
+- Improved UI/UX
+- Advanced task filters
+- Search functionality
+- Better loading states
+- Dashboard analytics
+- Mobile experience refinements
 
-📌 Autor
-Jefferson Rizzetto
+---
+
+# 🌐 Live Demo
+
+👉 https://SEU-LINK-VERCEL.vercel.app
+
+---
+
+# 👨‍💻 Author
+
+Developed by Jefferson Rizzetto.
+
+- GitHub: https://github.com/JRizzetto
+- LinkedIn: https://www.linkedin.com/in/jefferson-rizzetto/
