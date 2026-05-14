@@ -166,4 +166,4 @@ Each project increases in complexity and focuses on improving:
 # 🌐 Contact
 
 - GitHub: https://github.com/JRizzetto
-- LinkedIn: https://www.linkedin.com/in/SEU-LINKEDIN
+- LinkedIn: https://www.linkedin.com/in/jefferson-rizzetto/
