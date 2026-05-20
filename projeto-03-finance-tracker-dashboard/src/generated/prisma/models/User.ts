@@ -190,8 +190,8 @@ export type UserWhereInput = {
   password?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  categories?: Prisma.CategoryListRelationFilter
-  transactions?: Prisma.TransactionListRelationFilter
+  Category?: Prisma.CategoryListRelationFilter
+  Transaction?: Prisma.TransactionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -201,8 +201,8 @@ export type UserOrderByWithRelationInput = {
   password?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  categories?: Prisma.CategoryOrderByRelationAggregateInput
-  transactions?: Prisma.TransactionOrderByRelationAggregateInput
+  Category?: Prisma.CategoryOrderByRelationAggregateInput
+  Transaction?: Prisma.TransactionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -215,8 +215,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   password?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  categories?: Prisma.CategoryListRelationFilter
-  transactions?: Prisma.TransactionListRelationFilter
+  Category?: Prisma.CategoryListRelationFilter
+  Transaction?: Prisma.TransactionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -244,25 +244,25 @@ export type UserScalarWhereWithAggregatesInput = {
 }
 
 export type UserCreateInput = {
-  id?: string
+  id: string
   name?: string | null
   email: string
   password: string
   createdAt?: Date | string
-  updatedAt?: Date | string
-  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
-  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  updatedAt: Date | string
+  Category?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  Transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
-  id?: string
+  id: string
   name?: string | null
   email: string
   password: string
   createdAt?: Date | string
-  updatedAt?: Date | string
-  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
-  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  updatedAt: Date | string
+  Category?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  Transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -272,8 +272,8 @@ export type UserUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
-  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  Category?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  Transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -283,17 +283,17 @@ export type UserUncheckedUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
-  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  Category?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  Transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
-  id?: string
+  id: string
   name?: string | null
   email: string
   password: string
   createdAt?: Date | string
-  updatedAt?: Date | string
+  updatedAt: Date | string
 }
 
 export type UserUpdateManyMutationInput = {
@@ -312,6 +312,11 @@ export type UserUncheckedUpdateManyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -341,161 +346,144 @@ export type UserMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type UserScalarRelationFilter = {
-  is?: Prisma.UserWhereInput
-  isNot?: Prisma.UserWhereInput
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
-export type UserCreateNestedOneWithoutCategoriesInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutCategoriesInput, Prisma.UserUncheckedCreateWithoutCategoriesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCategoriesInput
+export type UserCreateNestedOneWithoutCategoryInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCategoryInput, Prisma.UserUncheckedCreateWithoutCategoryInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCategoryInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutCategoriesNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutCategoriesInput, Prisma.UserUncheckedCreateWithoutCategoriesInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCategoriesInput
-  upsert?: Prisma.UserUpsertWithoutCategoriesInput
+export type UserUpdateOneRequiredWithoutCategoryNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCategoryInput, Prisma.UserUncheckedCreateWithoutCategoryInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCategoryInput
+  upsert?: Prisma.UserUpsertWithoutCategoryInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCategoriesInput, Prisma.UserUpdateWithoutCategoriesInput>, Prisma.UserUncheckedUpdateWithoutCategoriesInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCategoryInput, Prisma.UserUpdateWithoutCategoryInput>, Prisma.UserUncheckedUpdateWithoutCategoryInput>
 }
 
-export type UserCreateNestedOneWithoutTransactionsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTransactionsInput, Prisma.UserUncheckedCreateWithoutTransactionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransactionsInput
+export type UserCreateNestedOneWithoutTransactionInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTransactionInput, Prisma.UserUncheckedCreateWithoutTransactionInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransactionInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutTransactionsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTransactionsInput, Prisma.UserUncheckedCreateWithoutTransactionsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransactionsInput
-  upsert?: Prisma.UserUpsertWithoutTransactionsInput
+export type UserUpdateOneRequiredWithoutTransactionNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTransactionInput, Prisma.UserUncheckedCreateWithoutTransactionInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransactionInput
+  upsert?: Prisma.UserUpsertWithoutTransactionInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTransactionsInput, Prisma.UserUpdateWithoutTransactionsInput>, Prisma.UserUncheckedUpdateWithoutTransactionsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTransactionInput, Prisma.UserUpdateWithoutTransactionInput>, Prisma.UserUncheckedUpdateWithoutTransactionInput>
 }
 
-export type UserCreateWithoutCategoriesInput = {
-  id?: string
+export type UserCreateWithoutCategoryInput = {
+  id: string
   name?: string | null
   email: string
   password: string
   createdAt?: Date | string
-  updatedAt?: Date | string
-  transactions?: Prisma.TransactionCreateNestedManyWithoutUserInput
+  updatedAt: Date | string
+  Transaction?: Prisma.TransactionCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutCategoriesInput = {
-  id?: string
+export type UserUncheckedCreateWithoutCategoryInput = {
+  id: string
   name?: string | null
   email: string
   password: string
   createdAt?: Date | string
-  updatedAt?: Date | string
-  transactions?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
+  updatedAt: Date | string
+  Transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutCategoriesInput = {
+export type UserCreateOrConnectWithoutCategoryInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutCategoriesInput, Prisma.UserUncheckedCreateWithoutCategoriesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCategoryInput, Prisma.UserUncheckedCreateWithoutCategoryInput>
 }
 
-export type UserUpsertWithoutCategoriesInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutCategoriesInput, Prisma.UserUncheckedUpdateWithoutCategoriesInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutCategoriesInput, Prisma.UserUncheckedCreateWithoutCategoriesInput>
+export type UserUpsertWithoutCategoryInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCategoryInput, Prisma.UserUncheckedUpdateWithoutCategoryInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCategoryInput, Prisma.UserUncheckedCreateWithoutCategoryInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutCategoriesInput = {
+export type UserUpdateToOneWithWhereWithoutCategoryInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutCategoriesInput, Prisma.UserUncheckedUpdateWithoutCategoriesInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCategoryInput, Prisma.UserUncheckedUpdateWithoutCategoryInput>
 }
 
-export type UserUpdateWithoutCategoriesInput = {
+export type UserUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  transactions?: Prisma.TransactionUpdateManyWithoutUserNestedInput
+  Transaction?: Prisma.TransactionUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutCategoriesInput = {
+export type UserUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  transactions?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
+  Transaction?: Prisma.TransactionUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateWithoutTransactionsInput = {
-  id?: string
+export type UserCreateWithoutTransactionInput = {
+  id: string
   name?: string | null
   email: string
   password: string
   createdAt?: Date | string
-  updatedAt?: Date | string
-  categories?: Prisma.CategoryCreateNestedManyWithoutUserInput
+  updatedAt: Date | string
+  Category?: Prisma.CategoryCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutTransactionsInput = {
-  id?: string
+export type UserUncheckedCreateWithoutTransactionInput = {
+  id: string
   name?: string | null
   email: string
   password: string
   createdAt?: Date | string
-  updatedAt?: Date | string
-  categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
+  updatedAt: Date | string
+  Category?: Prisma.CategoryUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutTransactionsInput = {
+export type UserCreateOrConnectWithoutTransactionInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTransactionsInput, Prisma.UserUncheckedCreateWithoutTransactionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTransactionInput, Prisma.UserUncheckedCreateWithoutTransactionInput>
 }
 
-export type UserUpsertWithoutTransactionsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTransactionsInput, Prisma.UserUncheckedUpdateWithoutTransactionsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTransactionsInput, Prisma.UserUncheckedCreateWithoutTransactionsInput>
+export type UserUpsertWithoutTransactionInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTransactionInput, Prisma.UserUncheckedUpdateWithoutTransactionInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTransactionInput, Prisma.UserUncheckedCreateWithoutTransactionInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutTransactionsInput = {
+export type UserUpdateToOneWithWhereWithoutTransactionInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTransactionsInput, Prisma.UserUncheckedUpdateWithoutTransactionsInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTransactionInput, Prisma.UserUncheckedUpdateWithoutTransactionInput>
 }
 
-export type UserUpdateWithoutTransactionsInput = {
+export type UserUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  categories?: Prisma.CategoryUpdateManyWithoutUserNestedInput
+  Category?: Prisma.CategoryUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutTransactionsInput = {
+export type UserUncheckedUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  categories?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
+  Category?: Prisma.CategoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -504,13 +492,13 @@ export type UserUncheckedUpdateWithoutTransactionsInput = {
  */
 
 export type UserCountOutputType = {
-  categories: number
-  transactions: number
+  Category: number
+  Transaction: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  categories?: boolean | UserCountOutputTypeCountCategoriesArgs
-  transactions?: boolean | UserCountOutputTypeCountTransactionsArgs
+  Category?: boolean | UserCountOutputTypeCountCategoryArgs
+  Transaction?: boolean | UserCountOutputTypeCountTransactionArgs
 }
 
 /**
@@ -526,14 +514,14 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountCategoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type UserCountOutputTypeCountCategoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.CategoryWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type UserCountOutputTypeCountTransactionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TransactionWhereInput
 }
 
@@ -545,8 +533,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   password?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
-  transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
+  Category?: boolean | Prisma.User$CategoryArgs<ExtArgs>
+  Transaction?: boolean | Prisma.User$TransactionArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -579,8 +567,8 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  categories?: boolean | Prisma.User$categoriesArgs<ExtArgs>
-  transactions?: boolean | Prisma.User$transactionsArgs<ExtArgs>
+  Category?: boolean | Prisma.User$CategoryArgs<ExtArgs>
+  Transaction?: boolean | Prisma.User$TransactionArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -589,8 +577,8 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    categories: Prisma.$CategoryPayload<ExtArgs>[]
-    transactions: Prisma.$TransactionPayload<ExtArgs>[]
+    Category: Prisma.$CategoryPayload<ExtArgs>[]
+    Transaction: Prisma.$TransactionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -993,8 +981,8 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  categories<T extends Prisma.User$categoriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$categoriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  transactions<T extends Prisma.User$transactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  Category<T extends Prisma.User$CategoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$CategoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  Transaction<T extends Prisma.User$TransactionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$TransactionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1423,9 +1411,9 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.categories
+ * User.Category
  */
-export type User$categoriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$CategoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Category
    */
@@ -1447,9 +1435,9 @@ export type User$categoriesArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * User.transactions
+ * User.Transaction
  */
-export type User$transactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$TransactionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Transaction
    */
