@@ -84,7 +84,44 @@ npm run dev
    - Prisma Client setup
    - conexão de banco de dados reutilizável
    - estrutura de projeto escalável
-   1. Criar arquivo de cliente Prisma
-      Criar a pasta: src/lib/prisma.ts (arquivo com código no codigos.md)
-   2. Test Prisma Connection
-      src/app/api/test/route.ts (arquivo com código no codigos.md)
+     4.1. Criar arquivo de cliente Prisma
+     Criar a pasta: src/lib/prisma.ts (arquivo com código no codigos.md)
+     4.2. Test Prisma Connection
+     src/app/api/test/route.ts (arquivo com código no codigos.md)
+
+5. Authentication Architecture (NextAuth)
+   Now the project officially starts becoming a SaaS platform.
+   - 5.1. Create Auth Folder Structure
+     src/lib/auth.ts
+   - 5.2. Create Zod Validation Schema Folder
+     src/schemas/register-schema.ts
+   - 5.3. Create Register Schema
+     inside src/schemas/register-schema.ts (arquivo com código no codigos.md)
+   - 5.4. Create Register API Route
+     Create: src/app/api/register/route.ts (we are not imprementing it yet)
+
+6. Register Backend
+   The flow will be: Receive request, Validate body with Zod, Check if user already exists, Hash password, Create user, Return safe response
+   - 6.1 - Inside: src/app/api/register/route.ts (arquivo com código no codigos.md)
+   - Test in Insomnia, Create a POST request: http://localhost:3000/api/register
+     {
+     "name": "Jefferson Rizzetto",
+     "email": "jefferson@test.com",
+     "password": "123456"
+     }
+
+7. NextAuth Configuration
+   The core authentication layer of the application.
+   This is where: login, sessions, protected routes, authenticated users
+   - 7.1 - Create Auth Route Structure
+     src/app/api/auth/[...nextauth]/route.ts
+     NextAuth uses it internally for: login, logout, session, callbacks, authentication flow
+   - 7.2. Configure auth.ts
+     Inside: "src/lib/auth.ts" (arquivo com código no codigos.md)
+   - 7.3. Configure NextAuth Route
+     Open: src/app/api/auth/[...nextauth]/route.ts (arquivo com código no codigos.md)
+   - 7.4. Add Environment Variables
+     Inside .env
+     NEXTAUTH_SECRET=super-secret-key
+     NEXTAUTH_URL=http://localhost:3000
+     For now, any random string is fine for development.
