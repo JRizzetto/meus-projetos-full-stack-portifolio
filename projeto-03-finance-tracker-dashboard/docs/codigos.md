@@ -185,3 +185,301 @@ Adaptadores e bibliotecas para funcionar o prisma
     const handler = NextAuth(authOptions)
 
     export { handler as GET, handler as POST }
+
+8.  Login, Session Testing and Protected Route
+    8.1. Create a Login Schema
+    import { z } from "zod";
+
+        export const loginSchema = z.object({
+        email: z.email("Invalid email address"),
+        password: z.string().min(1, "Password is required"),
+        });
+
+        8.3. Create a Session Test Route
+        Create: src/app/api/session-test/route.ts
+        import { authOptions } from "@/lib/auth"
+        import { getServerSession } from "next-auth"
+        import { NextResponse } from "next/server"
+
+        export async function GET() {
+        const session = await getServerSession(authOptions)
+
+        return NextResponse.json({
+        session,
+        })
+        }
+
+        8.4. Create a Protected API Route
+        Create: src/app/api/protected-test/route.ts
+            import { authOptions } from "@/lib/auth"
+            import { getServerSession } from "next-auth"
+            import { NextResponse } from "next/server"
+
+            export async function GET() {
+            const session = await getServerSession(authOptions)
+
+            if (!session?.user) {
+            return NextResponse.json(
+            { message: "Unauthorized." },
+            { status: 401 }
+            )
+            }
+
+            return NextResponse.json({
+            message: "You are authenticated.",
+            user: session.user,
+            })
+            }
+
+9.  Authentication UI Architecture
+    9.3. Create RegisterForm Component
+    Create: src/components/auth/RegisterForm.tsx  
+     "use client"
+
+    export function RegisterForm() {
+    return (
+     <div>
+     <h1>Register Form</h1>
+     </div>
+     )
+     }
+
+    9.4. Render RegisterForm in Page
+    Inside: src/app/register/page.tsx
+    import { RegisterForm } from "@/components/auth/RegisterForm"
+
+    export default function RegisterPage() {
+    return (
+      <main>
+      <RegisterForm />
+      </main>
+      )
+      }
+
+    9.5. Create LoginForm Component
+    Create: src/components/auth/LoginForm.tsx (arquivo com código no codigos.md)
+    "use client"
+
+    export function LoginForm() {
+    return (
+       <div>
+       <h1>Login Form</h1>
+       </div>
+       )
+       }
+
+    9.6. Render LoginForm in Page
+    Inside: src/app/login/page.tsx
+    import { LoginForm } from "@/components/auth/LoginForm"
+
+    export default function LoginPage() {
+    return (
+      <main>
+      <LoginForm />
+      </main>
+      )
+      }
+
+10. Real Register Form + API Integration
+    Open: src/components/auth/RegisterForm.tsx
+    Replace everything with: (code in codigos.md)
+    "use client"
+
+    import { useState } from "react"
+    import { useRouter } from "next/navigation"
+    import toast from "react-hot-toast"
+
+    export function RegisterForm() {
+    const router = useRouter()
+
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setIsLoading(true)
+
+               try {
+                  const response = await fetch("/api/register", {
+                  method: "POST",
+                  headers: {
+                     "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                     name,
+                     email,
+                     password,
+                  }),
+                  })
+
+                  const data = await response.json()
+
+                  if (!response.ok) {
+                  toast.error(data.message || "Something went wrong.")
+                  return
+                  }
+
+                  toast.success("Account created successfully.")
+                  router.push("/login")
+               } catch (error) {
+                  console.error("REGISTER_FORM_ERROR", error)
+                  toast.error("Unexpected error. Please try again.")
+               } finally {
+                  setIsLoading(false)
+               }
+
+    }
+
+    return (
+
+         <form onSubmit={handleSubmit} className="mx-auto mt-20 flex w-full max-w-md flex-col gap-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-8 text-white shadow-xl">
+         <div>
+         <h1 className="text-2xl font-semibold">Create your account</h1>
+         <p className="mt-2 text-sm text-zinc-400">
+         Start tracking your finances with a modern dashboard.
+         </p>
+         </div>
+
+                  <input
+                  type="text"
+                  placeholder="Full name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm outline-none focus:border-emerald-500"
+                  />
+
+                  <input
+                  type="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm outline-none focus:border-emerald-500"
+                  />
+
+                  <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm outline-none focus:border-emerald-500"
+                  />
+
+                  <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="rounded-lg bg-emerald-500 px-4 py-3 text-sm font-medium text-zinc-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                  {isLoading ? "Creating account..." : "Create account"}
+                  </button>
+               </form>
+
+    )
+    }
+
+11. Real Login Flow + Session Authentication
+    - 11.2. Create Providers Component
+      Create: src/components/providers.tsx (code in codigos.md)
+      "use client"
+
+    import { SessionProvider } from "next-auth/react"
+
+    interface ProvidersProps {
+    children: React.ReactNode
+    }
+
+    export function Providers({ children }: ProvidersProps) {
+    return (
+    <SessionProvider>
+    {children}
+    </SessionProvider>
+    )
+    }
+    - 11.4. Build Real Login Form
+      "use client"
+
+    import { signIn } from "next-auth/react"
+    import { useRouter } from "next/navigation"
+    import { useState } from "react"
+    import toast from "react-hot-toast"
+
+    export function LoginForm() {
+    const router = useRouter()
+
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+            setIsLoading(true)
+
+            try {
+               const response = await signIn("credentials", {
+               email,
+               password,
+               redirect: false,
+               })
+
+               if (response?.error) {
+               toast.error("Invalid email or password.")
+               return
+               }
+
+               toast.success("Login successful.")
+
+               router.push("/dashboard")
+            } catch (error) {
+               console.error("LOGIN_ERROR", error)
+
+               toast.error("Something went wrong.")
+            } finally {
+               setIsLoading(false)
+            }
+
+    }
+
+    return (
+      <form
+               onSubmit={handleSubmit}
+               className="mx-auto mt-20 flex w-full max-w-md flex-col gap-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-8 text-white shadow-xl"
+            >
+      <div>
+      <h1 className="text-2xl font-semibold">
+      Welcome back
+      </h1>
+
+               <p className="mt-2 text-sm text-zinc-400">
+                  Login to continue managing your finances.
+               </p>
+               </div>
+
+               <input
+               type="email"
+               placeholder="Email address"
+               value={email}
+               onChange={(event) => setEmail(event.target.value)}
+               className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm outline-none focus:border-emerald-500"
+               />
+
+               <input
+               type="password"
+               placeholder="Password"
+               value={password}
+               onChange={(event) => setPassword(event.target.value)}
+               className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm outline-none focus:border-emerald-500"
+               />
+
+               <button
+               type="submit"
+               disabled={isLoading}
+               className="rounded-lg bg-emerald-500 px-4 py-3 text-sm font-medium text-zinc-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70"
+               >
+               {isLoading ? "Signing in..." : "Sign in"}
+               </button>
+            </form>
+
+    )
+    }

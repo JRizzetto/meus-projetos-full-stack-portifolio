@@ -1,4 +1,4 @@
-Projeto 3 — Finance Tracker Dashboard.
+- Projeto 3 — Finance Tracker Dashboard.
 
 Pasta principal criada dentro do projeto:
 C:\Users\jeffe\Programador\meus-projetos-full-stack-portifólio\3-finance-tracker-dashboard
@@ -39,8 +39,6 @@ npm run dev
 
    npm install -D tsx
 
----
-
 2. Database & Prisma Architecture
    Para esse projeto, o banco precisa representar um produto financeiro real, não só uma lista de transações.
    - User
@@ -68,8 +66,6 @@ npm run dev
    Abra prisma/schema.prisma e coloque o conteúdo:
    database-modeling.md
    Entrar no arquivo: database-modeling.md
-
----
 
 3. Neon Database + First Migration
    - Criar projeto no Neon db: finance-tracker-dashboard
@@ -125,3 +121,67 @@ npm run dev
      NEXTAUTH_SECRET=super-secret-key
      NEXTAUTH_URL=http://localhost:3000
      For now, any random string is fine for development.
+
+8. Login, Session Testing and Protected Route
+   - 8.1. Create a Login Schema
+     Create: src/schemas/login-schema.ts (arquivo com código no codigos.md)
+   - 8.2. Test Login with NextAuth
+     NextAuth already created the login endpoint for us: POST /api/auth/callback/credentials
+   - 8.3. Create a Session Test Route
+     Create: src/app/api/session-test/route.ts (arquivo com código no codigos.md)
+     Now access: http://localhost:3000/api/session-test
+     {
+     "session": null
+     }
+   - 8.4. Create a Protected API Route
+     Create: src/app/api/protected-test/route.ts (arquivo com código no codigos.md)
+     Now access: http://localhost:3000/api/protected-test
+     {
+     "message": "Unauthorized."
+     }
+
+9. Authentication UI Architecture
+   Pages We’ll Build: /register & /login
+   Both pages will: use Client Components, use React state, communicate with backend APIs, display loading states, display error messages, redirect users after authentication
+   - 9.1. Create Auth Pages
+     Create: src/app/register/page.tsx and src/app/login/page.tsx
+   - 9.2. Create Auth Components Folder
+     Create: src/components/auth
+     Inside we’ll eventually have: LoginForm.tsx, RegisterForm.tsx, AuthCard.tsx, AuthInput.tsx
+   - 9.3. Create RegisterForm Component
+     Create: src/components/auth/RegisterForm.tsx (arquivo com código no codigos.md)
+   - 9.4. Render RegisterForm in Page
+     Inside: src/app/register/page.tsx (arquivo com código no codigos.md)
+   - 9.5. Create LoginForm Component
+     Create: src/components/auth/LoginForm.tsx (arquivo com código no codigos.md)
+   - 9.6. Render LoginForm in Page
+     Inside: src/app/login/page.tsx (arquivo com código no codigos.md)
+
+10. Real Register Form + API Integration
+    Open: src/components/auth/RegisterForm.tsx
+    Replace everything with: (code in codigos.md)
+    Now we need the toast provider.
+    Open: src/app/layout.tsx
+    Add: import { Toaster } from "react-hot-toast"
+    And inside <body>, add: <Toaster position="top-right" />
+    Now test: http://localhost:3000/register
+
+11. Real Login Flow + Session Authentication
+    Now we’ll implement: real login, session creation, authentication state, redirect after login
+    - 11.1. Install NextAuth React Helpers: npm install next-auth
+    - 11.2. Create Providers Component
+      Create: src/components/providers.tsx (code in codigos.md)
+    - 11.3. Configure layout.tsx
+      Import: import { Providers } from "@/components/providers"
+      Then wrap children:
+      <body>
+        <Providers>
+          <Toaster position="top-right" />
+          {children}
+        </Providers>
+      </body>
+    - 11.4. Build Real Login Form
+      Open: src/components/auth/LoginForm.tsx (code in codigos.md)
+    - 11.5. Test Login  
+      Access: http://localhost:3000/login
+      Use the user you created earlier.
