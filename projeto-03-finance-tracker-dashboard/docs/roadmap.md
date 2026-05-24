@@ -185,3 +185,11 @@ npm run dev
     - 11.5. Test Login  
       Access: http://localhost:3000/login
       Use the user you created earlier.
+
+12. Protected Dashboard + Route Protection
+    12.1. Create Dashboard Page
+    Create: src/app/dashboard/page.tsx
+    12.2. Protect the Dashboard Route (code in codigos.md)
+
+13. Dashboard Layout Architecture
+    Create: src/app/dashboard/layout.tsx (code in codigos.md)

@@ -483,3 +483,71 @@ Adaptadores e bibliotecas para funcionar o prisma
 
     )
     }
+
+12. Protected Dashboard + Route Protection
+    12.2. Protect the Dashboard Route (code in codigos.md)
+    import { authOptions } from "@/lib/auth"
+    import { getServerSession } from "next-auth"
+    import { redirect } from "next/navigation"
+
+    export default async function DashboardPage() {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user) {
+    redirect("/login")
+    }
+
+    return (
+      <main>
+      <h1>Welcome to your dashboard</h1>
+
+               <p>{session.user.email}</p>
+            </main>
+
+    )
+    }
+
+13. Dashboard Layout Architecture
+    Create: src/app/dashboard/layout.tsx (code in codigos.md)
+    import { authOptions } from "@/lib/auth"
+    import { getServerSession } from "next-auth"
+    import { redirect } from "next/navigation"
+
+    interface DashboardLayoutProps {
+    children: React.ReactNode
+    }
+
+    export default async function DashboardLayout({ children }: DashboardLayoutProps) {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user) {
+    redirect("/login")
+    }
+
+    return (
+    <div className="min-h-screen bg-zinc-950 text-white">
+    <div className="flex min-h-screen">
+    <aside className="hidden w-72 border-r border-zinc-800 bg-zinc-950 p-6 lg:block">
+    <h2 className="text-xl font-semibold">FinanceOS</h2>
+
+               <nav className="mt-8 flex flex-col gap-3 text-sm text-zinc-400">
+                  <a href="/dashboard" className="rounded-lg px-3 py-2 text-white bg-zinc-900">
+                  Overview
+                  </a>
+                  <a href="/dashboard/transactions" className="rounded-lg px-3 py-2 hover:bg-zinc-900">
+                  Transactions
+                  </a>
+                  <a href="/dashboard/categories" className="rounded-lg px-3 py-2 hover:bg-zinc-900">
+                  Categories
+                  </a>
+               </nav>
+            </aside>
+
+            <main className="flex-1 p-6 lg:p-10">
+               {children}
+            </main>
+            </div>
+         </div>
+
+    )
+    }
