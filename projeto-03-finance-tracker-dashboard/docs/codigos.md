@@ -509,9 +509,9 @@ Adaptadores e bibliotecas para funcionar o prisma
 
 13. Dashboard Layout Architecture
     Create: src/app/dashboard/layout.tsx (code in codigos.md)
-    import { authOptions } from "@/lib/auth"
-    import { getServerSession } from "next-auth"
-    import { redirect } from "next/navigation"
+    - import { authOptions } from "@/lib/auth"
+      import { getServerSession } from "next-auth"
+      import { redirect } from "next/navigation"
 
     interface DashboardLayoutProps {
     children: React.ReactNode
@@ -551,3 +551,387 @@ Adaptadores e bibliotecas para funcionar o prisma
 
     )
     }
+    - export default function DashboardPage() {
+      return (
+         <section>
+            <h1 className="text-3xl font-semibold">Financial Overview</h1>
+            <p className="mt-2 text-zinc-400">
+            Track your income, expenses and financial growth.
+            </p>
+         </section>
+      )
+      }
+
+14. SaaS Dashboard Shell
+    - 14.2. Create DashboardSidebar Component
+      Create: src/components/dashboard/DashboardSidebar.tsx
+      export function DashboardSidebar() {
+      return (
+      <aside className="hidden w-72 border-r border-zinc-800 bg-zinc-950 p-6 lg:block">
+      <h2 className="text-2xl font-bold tracking-tight text-white">
+      FinanceOS
+      </h2>
+
+                   <nav className="mt-10 flex flex-col gap-3 text-sm">
+                   <a
+                      href="/dashboard"
+                      className="rounded-lg bg-zinc-900 px-4 py-3 text-white transition hover:bg-zinc-800"
+                   >
+                      Overview
+                   </a>
+
+                   <a
+                      href="/dashboard/transactions"
+                      className="rounded-lg px-4 py-3 text-zinc-400 transition hover:bg-zinc-900 hover:text-white"
+                   >
+                      Transactions
+                   </a>
+
+                   <a
+                      href="/dashboard/categories"
+                      className="rounded-lg px-4 py-3 text-zinc-400 transition hover:bg-zinc-900 hover:text-white"
+                   >
+                      Categories
+                   </a>
+                   </nav>
+                </aside>
+
+      )
+      }
+
+    - 14.3. Create DashboardTopbar Component
+      Create: src/components/dashboard/DashboardTopbar.tsx (code in codigos.md)
+      import { UserMenu } from "./UserMenu"
+
+      interface DashboardTopbarProps {
+      userName?: string | null
+      userEmail?: string | null
+      }
+
+      export function DashboardTopbar({
+      userName,
+      userEmail,
+      }: DashboardTopbarProps) {
+      return (
+      <header className="flex items-center justify-between border-b border-zinc-800 pb-6">
+      <div>
+      <h1 className="text-2xl font-semibold text-white">
+      Financial Dashboard
+      </h1>
+
+              <p className="mt-1 text-sm text-zinc-400">
+                 Monitor your financial performance and analytics.
+              </p>
+              </div>
+
+              <UserMenu
+              userName={userName}
+              userEmail={userEmail}
+              />
+           </header>
+
+      )
+      }
+      - 14.4. Create UserMenu Component
+        Create: src/components/dashboard/UserMenu.tsx
+        "use client"
+
+      import { signOut } from "next-auth/react"
+
+      interface UserMenuProps {
+      userName?: string | null
+      userEmail?: string | null
+      }
+
+      export function UserMenu({
+      userName,
+      userEmail,
+      }: UserMenuProps) {
+      return (
+
+         <div className="flex items-center gap-4">
+         <div className="text-right">
+         <p className="text-sm font-medium text-white">
+         {userName}
+         </p>
+
+                  <p className="text-xs text-zinc-400">
+                     {userEmail}
+                  </p>
+                  </div>
+
+                  <button
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="rounded-lg border border-zinc-700 px-4 py-2 text-sm text-zinc-300 transition hover:bg-zinc-900 hover:text-white"
+                  >
+                  Logout
+                  </button>
+               </div>
+
+      )
+      }
+      - 14.5. Update Dashboard Layout
+        Now replace your: src/app/dashboard/layout.tsx
+        import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar"
+        import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar"
+        import { authOptions } from "@/lib/auth"
+        import { getServerSession } from "next-auth"
+        import { redirect } from "next/navigation"
+
+        interface DashboardLayoutProps {
+        children: React.ReactNode
+        }
+
+        export default async function DashboardLayout({
+        children,
+        }: DashboardLayoutProps) {
+        const session = await getServerSession(authOptions)
+
+        if (!session?.user) {
+        redirect("/login")
+        }
+
+        return (
+        <div className="min-h-screen bg-zinc-950 text-white">
+        <div className="flex min-h-screen">
+        <DashboardSidebar />
+
+               <main className="flex-1 p-6 lg:p-10">
+                  <DashboardTopbar
+                     userName={session.user.name}
+                     userEmail={session.user.email}
+                  />
+
+                  <div className="mt-10">
+                     {children}
+                  </div>
+               </main>
+               </div>
+            </div>
+
+        )
+        }
+
+15. Financial Summary Cards Architecture
+    - 15.2. Create SummaryCard Component
+      Create: src/components/dashboard/summary/SummaryCard.tsx (code in codigos.md)
+      interface SummaryCardProps {
+      title: string
+      value: string
+      description: string
+      }
+
+    export function SummaryCard({
+    title,
+    value,
+    description,
+    }: SummaryCardProps) {
+    return (
+    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
+    <div className="flex items-start justify-between">
+    <div>
+    <p className="text-sm text-zinc-400">
+    {title}
+    </p>
+
+               <h2 className="mt-4 text-3xl font-bold text-white">
+                  {value}
+               </h2>
+
+               <p className="mt-2 text-sm text-zinc-500">
+                  {description}
+               </p>
+            </div>
+            </div>
+         </div>
+
+    )
+    }
+    - 15.3. Create SummaryCards Component
+      Create: src/components/dashboard/summary/SummaryCards.tsx (code in codigos.md)
+      import { SummaryCard } from "./SummaryCard"
+
+      export function SummaryCards() {
+      return (
+      <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <SummaryCard
+               title="Total Balance"
+               value="$12,450.00"
+               description="Current available balance"
+               />
+
+               <SummaryCard
+               title="Monthly Income"
+               value="$8,200.00"
+               description="Income this month"
+               />
+
+               <SummaryCard
+               title="Monthly Expenses"
+               value="$3,750.00"
+               description="Expenses this month"
+               />
+
+               <SummaryCard
+               title="Savings Rate"
+               value="42%"
+               description="Monthly savings performance"
+               />
+            </section>
+
+      )
+      }
+      - 15.4. Update Dashboard Page
+        Open: src/app/dashboard/page.tsx (code in codigos.md)
+        import { SummaryCards } from "@/components/dashboard/summary/SummaryCards"
+
+        export default function DashboardPage() {
+        return (
+         <section className="space-y-10">
+         <div>
+         <h1 className="text-3xl font-semibold text-white">
+         Financial Overview
+         </h1>
+
+               <p className="mt-2 text-zinc-400">
+                  Monitor your financial health and monthly performance.
+               </p>
+               </div>
+
+               <SummaryCards />
+            </section>
+
+        )
+        }
+
+16. Real Financial Data Architecture
+    - 16.1. Create transaction schema
+      Create: src/schemas/transaction-schema.ts  
+      import { z } from "zod"
+
+    export const transactionSchema = z.object({
+    title: z.string().min(2, "Title must have at least 2 characters"),
+    amount: z.number().positive("Amount must be greater than zero"),
+    type: z.enum(["INCOME", "EXPENSE"]),
+    date: z.string().min(1, "Date is required"),
+    description: z.string().optional(),
+    categoryId: z.string().min(1, "Category is required"),
+    })
+    - 16.2. Create transactions API route
+      src/app/api/transactions/route.ts
+      import { authOptions } from "@/lib/auth"
+      import { prisma } from "@/lib/prisma"
+      import { transactionSchema } from "@/schemas/transaction-schema"
+      import { getServerSession } from "next-auth"
+      import { NextResponse } from "next/server"
+
+      export async function GET() {
+      const session = await getServerSession(authOptions)
+
+      if (!session?.user?.email) {
+      return NextResponse.json(
+      { message: "Unauthorized." },
+      { status: 401 }
+      )
+      }
+
+      const user = await prisma.user.findUnique({
+      where: {
+      email: session.user.email,
+      },
+      })
+
+      if (!user) {
+      return NextResponse.json(
+      { message: "User not found." },
+      { status: 404 }
+      )
+      }
+
+      const transactions = await prisma.transaction.findMany({
+      where: {
+      userId: user.id,
+      },
+      include: {
+      category: true,
+      },
+      orderBy: {
+      date: "desc",
+      },
+      })
+
+      return NextResponse.json(transactions)
+      }
+
+      export async function POST(request: Request) {
+      const session = await getServerSession(authOptions)
+
+      if (!session?.user?.email) {
+      return NextResponse.json(
+      { message: "Unauthorized." },
+      { status: 401 }
+      )
+      }
+
+      try {
+      const body = await request.json()
+      const validatedData = transactionSchema.parse(body)
+
+      const user = await prisma.user.findUnique({
+      where: {
+      email: session.user.email,
+      },
+      })
+
+      if (!user) {
+      return NextResponse.json(
+      { message: "User not found." },
+      { status: 404 }
+      )
+      }
+
+      const category = await prisma.category.findFirst({
+      where: {
+      id: validatedData.categoryId,
+      userId: user.id,
+      },
+      })
+
+      if (!category) {
+      return NextResponse.json(
+      { message: "Category not found." },
+      { status: 404 }
+      )
+      }
+
+      const transaction = await prisma.transaction.create({
+      data: {
+      title: validatedData.title,
+      amount: validatedData.amount,
+      type: validatedData.type,
+      date: new Date(validatedData.date),
+      description: validatedData.description,
+      userId: user.id,
+      categoryId: validatedData.categoryId,
+      },
+      include: {
+      category: true,
+      },
+      })
+
+      return NextResponse.json(
+      {
+      message: "Transaction created successfully.",
+      transaction,
+      },
+      { status: 201 }
+      )
+      } catch (error) {
+      console.error("CREATE_TRANSACTION_ERROR", error)
+
+      return NextResponse.json(
+      { message: "Internal server error." },
+      { status: 500 }
+      )
+      }
+      }

@@ -1,7 +1,8 @@
+import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { DashboardTopbar } from "@/components/dashboard/DashboardTopbar";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { deflate } from "zlib";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -17,19 +18,18 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div>
-      <div>
-        <aside>
-          <h2>FinanceOS</h2>
+    <div className="min-h-screen bg-zinc-950 text-white">
+      <div className="flex min-h-screen">
+        <DashboardSidebar />
 
-          <nav>
-            <a href="/dashboard">Overview</a>
-            <a href="/dashboard/transactions">Transactions</a>
-            <a href="/dashboard/categories">Categories</a>
-          </nav>
-        </aside>
+        <main className="flex-1 p-6 lg:p-10">
+          <DashboardTopbar
+            userName={session.user.name}
+            userEmail={session.user.email}
+          />
 
-        <main>{children}</main>
+          <div className="mt-10">{children}</div>
+        </main>
       </div>
     </div>
   );

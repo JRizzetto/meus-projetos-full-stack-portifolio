@@ -1,19 +1,19 @@
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { SummaryCards } from "@/components/dashboard/summary/SummaryCards";
 
-export default async function DashboardPage() {
-  const session = await getServerSession(authOptions);
-
-  if (!session?.user) {
-    redirect("/login");
-  }
-
+export default function DashboardPage() {
   return (
-    <main>
-      <h1>Welcome to your dashboard</h1>
+    <section className="space-y-10">
+      <div>
+        <h1 className="text-3xl font-semibold text-white">
+          Financial Overview
+        </h1>
 
-      <p>{session.user.email}</p>
-    </main>
+        <p className="mt-2 text-zinc-400">
+          Monitor your financial health and monthly performance.
+        </p>
+      </div>
+
+      <SummaryCards />
+    </section>
   );
 }
