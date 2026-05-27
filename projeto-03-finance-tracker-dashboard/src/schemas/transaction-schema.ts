@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 export const transactionSchema = z.object({
   title: z.string().min(2, "Title must have at least 2 characters"),

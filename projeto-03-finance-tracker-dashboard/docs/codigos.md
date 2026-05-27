@@ -809,14 +809,15 @@ Adaptadores e bibliotecas para funcionar o prisma
       Create: src/schemas/transaction-schema.ts  
       import { z } from "zod"
 
-    export const transactionSchema = z.object({
-    title: z.string().min(2, "Title must have at least 2 characters"),
-    amount: z.number().positive("Amount must be greater than zero"),
-    type: z.enum(["INCOME", "EXPENSE"]),
-    date: z.string().min(1, "Date is required"),
-    description: z.string().optional(),
-    categoryId: z.string().min(1, "Category is required"),
-    })
+      export const transactionSchema = z.object({
+      title: z.string().min(2, "Title must have at least 2 characters"),
+      amount: z.number().positive("Amount must be greater than zero"),
+      type: z.enum(["INCOME", "EXPENSE"]),
+      date: z.string().min(1, "Date is required"),
+      description: z.string().optional(),
+      categoryId: z.string().min(1, "Category is required"),
+      })
+
     - 16.2. Create transactions API route
       src/app/api/transactions/route.ts
       import { authOptions } from "@/lib/auth"
@@ -934,4 +935,242 @@ Adaptadores e bibliotecas para funcionar o prisma
       { status: 500 }
       )
       }
+      }
+
+17. Category API Architecture
+    - 17.1. Create Category Schema
+      Create: src/schemas/category-schema.ts
+      import { z } from "zod"
+
+      export const categorySchema = z.object({
+      name: z
+      .string()
+      .min(2, "Category name must have at least 2 characters"),
+
+      type: z.enum(["INCOME", "EXPENSE"]),
+
+      color: z
+      .string()
+      .min(4, "Color is required"),
+      })
+
+    - 17.2. Create Categories API Route
+      Create: src/app/api/categories/route.ts
+      import { authOptions } from "@/lib/auth"
+      import { prisma } from "@/lib/prisma"
+      import { categorySchema } from "@/schemas/category-schema"
+      import { getServerSession } from "next-auth"
+      import { NextResponse } from "next/server"
+
+      export async function GET() {
+      const session = await getServerSession(authOptions)
+
+      if (!session?.user?.email) {
+      return NextResponse.json(
+      { message: "Unauthorized." },
+      { status: 401 }
+      )
+      }
+
+      const user = await prisma.user.findUnique({
+      where: {
+      email: session.user.email,
+      },
+      })
+
+      if (!user) {
+      return NextResponse.json(
+      { message: "User not found." },
+      { status: 404 }
+      )
+      }
+
+      const categories = await prisma.category.findMany({
+      where: {
+      userId: user.id,
+      },
+      orderBy: {
+      createdAt: "desc",
+      },
+      })
+
+      return NextResponse.json(categories)
+      }
+
+      export async function POST(request: Request) {
+      const session = await getServerSession(authOptions)
+
+      if (!session?.user?.email) {
+      return NextResponse.json(
+      { message: "Unauthorized." },
+      { status: 401 }
+      )
+      }
+
+      try {
+      const body = await request.json()
+
+            const validatedData = categorySchema.parse(body)
+
+            const user = await prisma.user.findUnique({
+               where: {
+               email: session.user.email,
+               },
+            })
+
+            if (!user) {
+               return NextResponse.json(
+               { message: "User not found." },
+               { status: 404 }
+               )
+            }
+
+            const existingCategory = await prisma.category.findFirst({
+               where: {
+               name: validatedData.name,
+               userId: user.id,
+               },
+            })
+
+            if (existingCategory) {
+               return NextResponse.json(
+               { message: "Category already exists." },
+               { status: 409 }
+               )
+            }
+
+            const category = await prisma.category.create({
+               data: {
+               name: validatedData.name,
+               type: validatedData.type,
+               color: validatedData.color,
+               userId: user.id,
+               },
+            })
+
+            return NextResponse.json(
+               {
+               message: "Category created successfully.",
+               category,
+               },
+               { status: 201 }
+            )
+
+      } catch (error) {
+      console.error("CREATE_CATEGORY_ERROR", error)
+
+            return NextResponse.json(
+               { message: "Internal server error." },
+               { status: 500 }
+            )
+
+      }
+      }
+
+18. Category UI + Authenticated API Integration
+    - 18.1. Create Category Form
+      Create: src/components/dashboard/categories/CategoryForm.tsx
+      "use client"
+
+      import { useState } from "react"
+      import toast from "react-hot-toast"
+
+      export function CategoryForm() {
+      const [name, setName] = useState("")
+      const [type, setType] = useState("EXPENSE")
+      const [color, setColor] = useState("#ef4444")
+      const [isLoading, setIsLoading] = useState(false)
+
+      async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+      event.preventDefault()
+      setIsLoading(true)
+
+           try {
+              const response = await fetch("/api/categories", {
+              method: "POST",
+              headers: {
+                 "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ name, type, color }),
+              })
+
+              const data = await response.json()
+
+              if (!response.ok) {
+              toast.error(data.message || "Something went wrong.")
+              return
+              }
+
+              toast.success("Category created successfully.")
+              setName("")
+           } catch (error) {
+              console.error("CREATE_CATEGORY_FORM_ERROR", error)
+              toast.error("Unexpected error.")
+           } finally {
+              setIsLoading(false)
+           }
+
+      }
+
+      return (
+      <form
+              onSubmit={handleSubmit}
+              className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6"
+           >
+      <h2 className="text-xl font-semibold text-white">Create category</h2>
+
+              <div className="mt-6 grid gap-4 md:grid-cols-4">
+              <input
+                 value={name}
+                 onChange={(event) => setName(event.target.value)}
+                 placeholder="Category name"
+                 className="rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"
+              />
+
+              <select
+                 value={type}
+                 onChange={(event) => setType(event.target.value)}
+                 className="rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"
+              >
+                 <option value="INCOME">Income</option>
+                 <option value="EXPENSE">Expense</option>
+              </select>
+
+              <input
+                 type="color"
+                 value={color}
+                 onChange={(event) => setColor(event.target.value)}
+                 className="h-12 rounded-lg border border-zinc-800 bg-zinc-950 px-2"
+              />
+
+              <button
+                 disabled={isLoading}
+                 className="rounded-lg bg-emerald-500 px-4 py-3 text-sm font-medium text-zinc-950 hover:bg-emerald-400 disabled:opacity-70"
+              >
+                 {isLoading ? "Creating..." : "Create category"}
+              </button>
+              </div>
+           </form>
+
+      )
+      }
+
+    - 18.2. Create Categories Page
+      Create: src/app/dashboard/categories/page.tsx
+      import { CategoryForm } from "@/components/dashboard/categories/CategoryForm"
+
+      export default function CategoriesPage() {
+      return (
+      <section className="space-y-8">
+      <div>
+      <h1 className="text-3xl font-semibold text-white">Categories</h1>
+      <p className="mt-2 text-zinc-400">
+      Organize your income and expenses for better analytics.
+      </p>
+      </div>
+
+              <CategoryForm />
+           </section>
+
+      )
       }

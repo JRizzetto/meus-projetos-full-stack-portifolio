@@ -231,3 +231,41 @@ npm run dev
       Create: src/schemas/transaction-schema.ts
     - 16.2. Create transactions API route
       src/app/api/transactions/route.ts
+
+17. Category API Architecture
+    Categories are critical because they power: analytics, charts, filters, expense organization, dashboard insights
+    - 17.1. Create Category Schema
+      Create: src/schemas/category-schema.ts
+    - 17.2. Create Categories API Route
+      Create: src/app/api/categories/route.ts
+    - 17.3. Test in Insomnia
+      POST: http://localhost:3000/api/categories
+      Body:
+      {
+      "name": "Food",
+      "type": "EXPENSE",
+      "color": "#ef4444"
+      }
+
+      Then create: Salary, Investments, Rent, Transport
+      Example:
+      {
+      "name": "Salary",
+      "type": "INCOME",
+      "color": "#22c55e"
+      }
+
+18. Category UI + Authenticated API Integration
+    Before creating transactions, we need a way to create categories from the browser.
+    - 18.1. Create Category Form
+      Create: src/components/dashboard/categories/CategoryForm.tsx
+    - 18.2. Create Categories Page
+      Create: src/app/dashboard/categories/page.tsx
+    - 18.3. Test
+      Go to: http://localhost:3000/dashboard/categories
+      Create these categories:
+      Salary — INCOME
+      Investments — INCOME
+      Food — EXPENSE
+      Rent — EXPENSE
+      Transport — EXPENSE
