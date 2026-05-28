@@ -269,3 +269,20 @@ npm run dev
       Food — EXPENSE
       Rent — EXPENSE
       Transport — EXPENSE
+
+19. Real Transaction Form Architecture
+    We’ll build: transaction creation form, category selection, authenticated API integration, financial flow foundation
+    - 19.1. Create Transactions Components Folder
+      Create: src/components/dashboard/transactions
+      Inside create: TransactionForm.tsx
+    - 19.2. Build TransactionForm
+      Create: src/components/dashboard/transactions/TransactionForm.tsx
+    - 19.3. Create Transactions Page
+      Create: src/app/dashboard/transactions/page.tsx
+    - 19.4. Test Transaction Flow
+      Go to: http://localhost:3000/dashboard/transactions
+      Create: salary, food expenses, rent, transport, investments
+      Example:
+      Salary — $5000
+      Food — $120
+      Rent — $900
