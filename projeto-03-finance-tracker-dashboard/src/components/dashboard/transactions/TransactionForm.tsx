@@ -146,7 +146,7 @@ export function TransactionForm() {
 
       <button
         disabled={isLoading}
-        className="mt-6 rounded-lg bg-emerald-500 px-4 py-3 text-sm font-medium text-zinc-950 hover:bg-emerald-400 disabled:opacity-70"
+        className="mt-6 rounded-lg bg-emerald-500 px-4 py-3 text-sm font-medium text-zinc-950 hover:bg-emerald-400 disabled:opacity-70 cursor-pointer"
       >
         {isLoading ? "Creating..." : "Create transaction"}
       </button>

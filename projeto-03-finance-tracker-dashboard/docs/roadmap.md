@@ -286,3 +286,100 @@ npm run dev
       Salary — $5000
       Food — $120
       Rent — $900
+
+20. Financial Analytics Architecture
+    - 20.1. Create Dashboard Metrics API
+      Create: src/app/api/dashboard/route.ts
+    - 20.2. Create Dashboard Metrics Hook
+      Create: src/hooks/useDashboardMetrics.ts
+    - 20.3. Refactor SummaryCards
+      Open: src/components/dashboard/summary/SummaryCards.tsx
+    - Test Go to: /dashboard
+
+21. Recent Transactions Widget + Dashboard Composition
+    Now we will make the dashboard feel much more like a real fintech product.
+    Current dashboard: Summary Cards
+    - Target dashboard:
+      Summary Cards
+      Recent Transactions
+      Charts (next)
+      Analytics (next)
+    - 21.1. Create Recent Transactions Component
+      Create: src/components/dashboard/transactions/RecentTransactions.tsx
+    - 21.2. Update Dashboard Page
+      Open: src/app/dashboard/page.tsx
+      Add: import { RecentTransactions } from "@/components/dashboard/transactions/RecentTransactions"
+
+22. Monthly Expense Chart with Recharts
+    This is the first real analytics widget of the project.
+    - 22.1. Create Chart Component
+      Create: src/components/dashboard/charts
+      Inside: MonthlyExpensesChart.tsx
+    - 22.2. Create Dashboard Analytics API
+      Create: src/app/api/dashboard/analytics/route.ts
+      import { authOptions } from "@/lib/auth"
+      import { prisma } from "@/lib/prisma"
+      import { getServerSession } from "next-auth"
+      import { NextResponse } from "next/server"
+
+      export async function GET() {
+      const session = await getServerSession(authOptions)
+
+      if (!session?.user?.email) {
+      return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+      )
+      }
+
+      const user = await prisma.user.findUnique({
+      where: {
+      email: session.user.email,
+      },
+      })
+
+      if (!user) {
+      return NextResponse.json(
+      { message: "User not found" },
+      { status: 404 }
+      )
+      }
+
+      const expenses = await prisma.transaction.findMany({
+      where: {
+      userId: user.id,
+      type: "EXPENSE",
+      },
+      orderBy: {
+      date: "asc",
+      },
+      })
+
+      const monthlyData = expenses.reduce<
+      Record<string, number>
+
+      > ((acc, transaction) => {
+
+          const month = new Date(transaction.date)
+            .toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+            })
+
+          acc[month] =
+            (acc[month] || 0) +
+            transaction.amount.toNumber()
+
+          return acc
+
+      }, {})
+
+      const chartData = Object.entries(monthlyData).map(
+      ([month, amount]) => ({
+      month,
+      amount,
+      })
+      )
+
+      return NextResponse.json(chartData)
+      }

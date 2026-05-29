@@ -1360,3 +1360,390 @@ Adaptadores e bibliotecas para funcionar o prisma
 
       )
       }
+
+20. Financial Analytics Architecture
+    - 20.1. Create Dashboard Metrics API
+      Create: src/app/api/dashboard/route.ts
+      import { authOptions } from "@/lib/auth"
+      import { prisma } from "@/lib/prisma"
+      import { getServerSession } from "next-auth"
+      import { NextResponse } from "next/server"
+
+    export async function GET() {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.email) {
+    return NextResponse.json(
+    { message: "Unauthorized" },
+    { status: 401 }
+    )
+    }
+
+    const user = await prisma.user.findUnique({
+    where: {
+    email: session.user.email,
+    },
+    })
+
+    if (!user) {
+    return NextResponse.json(
+    { message: "User not found" },
+    { status: 404 }
+    )
+    }
+
+    const transactions = await prisma.transaction.findMany({
+    where: {
+    userId: user.id,
+    },
+    })
+
+    const totalIncome = transactions
+    .filter((transaction) => transaction.type === "INCOME")
+    .reduce((acc, transaction) => acc + transaction.amount, 0)
+
+    const totalExpenses = transactions
+    .filter((transaction) => transaction.type === "EXPENSE")
+    .reduce((acc, transaction) => acc + transaction.amount, 0)
+
+    const totalBalance = totalIncome - totalExpenses
+
+    const savingsRate =
+    totalIncome > 0
+    ? Number(
+    ((totalBalance / totalIncome) \* 100).toFixed(1)
+    )
+    : 0
+
+    return NextResponse.json({
+    totalIncome,
+    totalExpenses,
+    totalBalance,
+    savingsRate,
+    })
+    }
+    - 20.2. Create Dashboard Metrics Hook
+      Create: src/hooks/useDashboardMetrics.ts
+      "use client"
+
+    import { useEffect, useState } from "react"
+
+    interface DashboardMetrics {
+    totalIncome: number
+    totalExpenses: number
+    totalBalance: number
+    savingsRate: number
+    }
+
+    export function useDashboardMetrics() {
+    const [metrics, setMetrics] =
+    useState<DashboardMetrics | null>(null)
+
+    const [isLoading, setIsLoading] = useState(true)
+
+    useEffect(() => {
+    async function loadMetrics() {
+    try {
+    const response = await fetch("/api/dashboard")
+    const data = await response.json()
+
+            setMetrics(data)
+            } catch (error) {
+            console.error("LOAD_METRICS_ERROR", error)
+            } finally {
+            setIsLoading(false)
+            }
+         }
+
+         loadMetrics()
+
+    }, [])
+
+    return {
+    metrics,
+    isLoading,
+    }
+    }
+    - 20.3. Refactor SummaryCards
+      Open: src/components/dashboard/summary/SummaryCards.tsx
+      "use client"
+
+      import { useDashboardMetrics } from "@/hooks/useDashboardMetrics"
+      import { SummaryCard } from "./SummaryCard"
+
+      export function SummaryCards() {
+      const { metrics, isLoading } =
+      useDashboardMetrics()
+
+      if (isLoading) {
+      return <p>Loading metrics...</p>
+      }
+
+      if (!metrics) {
+      return <p>Unable to load metrics.</p>
+      }
+
+      return (
+      <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <SummaryCard
+      title="Total Balance"
+      value={`$${metrics.totalBalance.toFixed(2)}`}
+      description="Current available balance"
+      />
+
+              <SummaryCard
+              title="Total Income"
+              value={`$${metrics.totalIncome.toFixed(2)}`}
+              description="All registered income"
+              />
+
+              <SummaryCard
+              title="Total Expenses"
+              value={`$${metrics.totalExpenses.toFixed(2)}`}
+              description="All registered expenses"
+              />
+
+              <SummaryCard
+              title="Savings Rate"
+              value={`${metrics.savingsRate}%`}
+              description="Savings performance"
+              />
+           </section>
+
+      )
+      }
+
+21. Recent Transactions Widget + Dashboard Composition
+    - 21.1. Create Recent Transactions Component
+      Create: src/components/dashboard/transactions/RecentTransactions.tsx
+      "use client"
+
+      import { useEffect, useState } from "react"
+
+      interface Transaction {
+      id: string
+      title: string
+      amount: number
+      type: "INCOME" | "EXPENSE"
+      date: string
+      }
+
+      export function RecentTransactions() {
+      const [transactions, setTransactions] = useState<Transaction[]>([])
+
+      useEffect(() => {
+      async function loadTransactions() {
+      try {
+      const response = await fetch("/api/transactions")
+      const data = await response.json()
+
+                setTransactions(data.slice(0, 5))
+                } catch (error) {
+                console.error("LOAD_TRANSACTIONS_ERROR", error)
+                }
+             }
+
+             loadTransactions()
+
+      }, [])
+
+      return (
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
+        <h2 className="text-xl font-semibold text-white">
+        Recent Transactions
+        </h2>
+
+                <div className="mt-6 space-y-4">
+                {transactions.length === 0 ? (
+                   <p className="text-zinc-400">
+                      No transactions found.
+                   </p>
+                ) : (
+                   transactions.map((transaction) => (
+                      <div
+                      key={transaction.id}
+                      className="flex items-center justify-between border-b border-zinc-800 pb-3"
+                      >
+                      <div>
+                         <p className="font-medium text-white">
+                            {transaction.title}
+                         </p>
+
+                         <p className="text-sm text-zinc-400">
+                            {new Date(
+                            transaction.date
+                            ).toLocaleDateString()}
+                         </p>
+                      </div>
+
+                      <span
+                         className={
+                            transaction.type === "INCOME"
+                            ? "font-medium text-emerald-400"
+                            : "font-medium text-red-400"
+                         }
+                      >
+                         {transaction.type === "INCOME" ? "+" : "-"}$
+                         {Number(transaction.amount).toFixed(2)}
+                      </span>
+                      </div>
+                   ))
+                )}
+                </div>
+             </div>
+
+      )
+      }
+      - 21.2. Update Dashboard Page
+        Open: src/app/dashboard/page.tsx
+        Add: import { RecentTransactions } from "@/components/dashboard/transactions/RecentTransactions"
+        import { SummaryCards } from "@/components/dashboard/summary/SummaryCards"
+        import { RecentTransactions } from "@/components/dashboard/transactions/RecentTransactions"
+
+        export default function DashboardPage() {
+        return (
+        <section className="space-y-10">
+        <div>
+        <h1 className="text-3xl font-semibold text-white">
+        Financial Overview
+        </h1>
+
+               <p className="mt-2 text-zinc-400">
+                  Monitor your financial health and monthly performance.
+               </p>
+               </div>
+
+               <SummaryCards />
+
+               <RecentTransactions />
+            </section>
+
+        )
+        }
+
+22. Monthly Expense Chart with Recharts
+    - 22.2. Create Dashboard Analytics API
+      Create: src/app/api/dashboard/analytics/route.ts
+      import { authOptions } from "@/lib/auth"
+      import { prisma } from "@/lib/prisma"
+      import { getServerSession } from "next-auth"
+      import { NextResponse } from "next/server"
+
+      export async function GET() {
+      const session = await getServerSession(authOptions)
+
+      if (!session?.user?.email) {
+      return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+      )
+      }
+
+      const user = await prisma.user.findUnique({
+      where: {
+      email: session.user.email,
+      },
+      })
+
+      if (!user) {
+      return NextResponse.json(
+      { message: "User not found" },
+      { status: 404 }
+      )
+      }
+
+      const expenses = await prisma.transaction.findMany({
+      where: {
+      userId: user.id,
+      type: "EXPENSE",
+      },
+      orderBy: {
+      date: "asc",
+      },
+      })
+
+      const monthlyData = expenses.reduce<
+      Record<string, number>
+
+      > ((acc, transaction) => {
+
+          const month = new Date(transaction.date)
+            .toLocaleDateString("en-US", {
+              month: "short",
+              year: "numeric",
+            })
+
+          acc[month] =
+            (acc[month] || 0) +
+            transaction.amount.toNumber()
+
+          return acc
+
+      }, {})
+
+      const chartData = Object.entries(monthlyData).map(
+      ([month, amount]) => ({
+      month,
+      amount,
+      })
+      )
+
+      return NextResponse.json(chartData)
+      }
+      - 22.3. Create Chart Component
+        Open: src/components/dashboard/charts/MonthlyExpensesChart.tsx
+        "use client"
+
+        import { useEffect, useState } from "react"
+        import {
+        ResponsiveContainer,
+        BarChart,
+        Bar,
+        XAxis,
+        YAxis,
+        Tooltip,
+        } from "recharts"
+
+        interface ChartData {
+        month: string
+        amount: number
+        }
+
+        export function MonthlyExpensesChart() {
+        const [data, setData] = useState<ChartData[]>([])
+
+        useEffect(() => {
+        async function loadData() {
+        const response = await fetch(
+        "/api/dashboard/analytics"
+        )
+
+               const result = await response.json()
+
+               setData(result)
+            }
+
+            loadData()
+
+        }, [])
+
+        return (
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6">
+        <h2 className="text-xl font-semibold text-white">
+        Monthly Expenses
+        </h2>
+
+               <div className="mt-6 h-[350px]">
+               <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={data}>
+                     <XAxis dataKey="month" />
+                     <YAxis />
+                     <Tooltip />
+                     <Bar dataKey="amount" />
+                  </BarChart>
+               </ResponsiveContainer>
+               </div>
+            </div>
+
+        )
+        }
