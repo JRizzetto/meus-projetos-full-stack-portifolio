@@ -1747,3 +1747,172 @@ Adaptadores e bibliotecas para funcionar o prisma
 
         )
         }
+
+23. Category Distribution Pie Chart
+    - 23.1. Create Analytics API
+      Create: src/app/api/dashboard/category-distribution/route.ts - import { authOptions } from "@/lib/auth"
+      import { prisma } from "@/lib/prisma"
+      import { getServerSession } from "next-auth"
+      import { NextResponse } from "next/server"
+
+            export async function GET() {
+            const session = await getServerSession(authOptions)
+
+            if (!session?.user?.email) {
+            return NextResponse.json(
+            { message: "Unauthorized" },
+            { status: 401 }
+            )
+            }
+
+            const user = await prisma.user.findUnique({
+            where: {
+            email: session.user.email,
+            },
+            })
+
+            if (!user) {
+            return NextResponse.json(
+            { message: "User not found" },
+            { status: 404 }
+            )
+            }
+
+            const expenses = await prisma.transaction.findMany({
+            where: {
+            userId: user.id,
+            type: "EXPENSE",
+            },
+            include: {
+            category: true,
+            },
+            })
+
+            const groupedData = expenses.reduce<
+            Record<string, { amount: number; color: string }>
+
+            > ((acc, transaction) => {
+            > const categoryName = transaction.category.name
+
+            if (!acc[categoryName]) {
+            acc[categoryName] = {
+            amount: 0,
+            color: transaction.category.color,
+            }
+            }
+
+            acc[categoryName].amount +=
+            transaction.amount.toNumber()
+
+            return acc
+            }, {})
+
+            const chartData = Object.entries(groupedData).map(
+            ([name, value]) => ({
+            name,
+            amount: value.amount,
+            color: value.color,
+            })
+            )
+
+            return NextResponse.json(chartData)
+            }
+
+      - 23.2. Create Pie Chart Component
+        Create: src/components/dashboard/charts/CategoryDistributionChart.tsx
+        "use client"
+
+               import { useEffect, useState } from "react"
+               import {
+               PieChart,
+               Pie,
+               Cell,
+               ResponsiveContainer,
+               Tooltip,
+               } from "recharts"
+
+               interface CategoryData {
+               name: string
+               amount: number
+               color: string
+               }
+
+               export function CategoryDistributionChart() {
+               const [data, setData] = useState<CategoryData[]>([])
+
+               useEffect(() => {
+                  async function loadData() {
+                     const response = await fetch(
+                     "/api/dashboard/category-distribution"
+                     )
+
+                     const result = await response.json()
+
+                     setData(result)
+                  }
+
+                  loadData()
+               }, [])
+
+               if (!data.length) {
+                  return (
+                     <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6">
+                     <h2 className="text-xl font-semibold text-white">
+                        Expense Categories
+                     </h2>
+
+                     <p className="mt-4 text-zinc-400">
+                        No expense data available.
+                     </p>
+                     </div>
+                  )
+               }
+
+               return (
+                  <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20">
+                     <div className="mb-6">
+                     <h2 className="text-xl font-semibold text-white">
+                        Expense Categories
+                     </h2>
+
+                     <p className="mt-1 text-sm text-zinc-400">
+                        Distribution of expenses by category.
+                     </p>
+                     </div>
+
+                     <div className="h-[350px]">
+                     <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                           <Pie
+                           data={data}
+                           dataKey="amount"
+                           nameKey="name"
+                           outerRadius={120}
+                           >
+                           {data.map((entry) => (
+                              <Cell
+                                 key={entry.name}
+                                 fill={entry.color}
+                              />
+                           ))}
+                           </Pie>
+
+                           <Tooltip
+                           formatter={(value) => [
+                              `$${value}`,
+                              "Amount",
+                           ]}
+                           contentStyle={{
+                              backgroundColor: "#18181b",
+                              border: "1px solid #27272a",
+                              borderRadius: "12px",
+                              color: "#fff",
+                           }}
+                           />
+                        </PieChart>
+                     </ResponsiveContainer>
+                     </div>
+                  </div>
+               )
+
+        }

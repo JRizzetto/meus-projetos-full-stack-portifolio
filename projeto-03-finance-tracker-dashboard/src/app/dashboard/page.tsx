@@ -1,6 +1,7 @@
 import { SummaryCards } from "@/components/dashboard/summary/SummaryCards";
 import { RecentTransactions } from "@/components/dashboard/transactions/RecentTransactions";
 import { MonthlyExpensesChart } from "@/components/dashboard/charts/MonthlyExpensesChart";
+import { CategoryDistributionChart } from "@/components/dashboard/charts/CategoryDistributionChart";
 
 export default function DashboardPage() {
   return (
@@ -20,6 +21,8 @@ export default function DashboardPage() {
       <RecentTransactions />
 
       <MonthlyExpensesChart />
+
+      <CategoryDistributionChart />
     </section>
   );
 }

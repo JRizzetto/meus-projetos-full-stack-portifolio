@@ -53,7 +53,11 @@ export function MonthlyExpensesChart() {
       <div className="mt-6 h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#3f3f46"
+              opacity={0.3}
+            />
 
             <XAxis
               dataKey="month"
@@ -68,6 +72,7 @@ export function MonthlyExpensesChart() {
               tickLine={false}
             />
             <Tooltip
+              formatter={(value) => [`$${value}`, "Expenses"]}
               contentStyle={{
                 backgroundColor: "#18181b",
                 border: "1px solid #27272a",
