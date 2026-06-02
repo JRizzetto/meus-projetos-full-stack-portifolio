@@ -333,3 +333,124 @@ npm run dev
       Open: src/app/dashboard/page.tsx
       Import: import { CategoryDistributionChart } from "@/components/dashboard/charts/CategoryDistributionChart"
       Render below the bar chart: <CategoryDistributionChart />
+
+24. Transaction Filters Architecture
+    Allow users to filter transactions by:
+    Category
+    Transaction Type
+    Date Range
+    Search Term
+    - 24.1 - Extend Transactions API
+      Instead of creating a new endpoint, we'll improve: /api/transactions
+    - 24.2 — Read Search Params
+      Open: src/app/api/transactions/route.ts
+      Inside your GET function: export async function GET(request: Request)
+      Add:
+      const { searchParams } = new URL(request.url)
+      const type = searchParams.get("type")
+      const categoryId = searchParams.get("categoryId")
+      const search = searchParams.get("search")
+    - 24.3 — Dynamic Prisma Filter
+      Before your findMany():
+      const filters: {
+      userId: string
+      type?: "INCOME" | "EXPENSE"
+      categoryId?: string
+      title?: {
+      contains: string
+      mode: "insensitive"
+      }
+      } = {
+      userId: user.id,
+      }
+
+    Add:
+    if (type === "INCOME" || type === "EXPENSE") {
+    filters.type = type
+    }
+
+    Add:
+    if (type === "INCOME" || type === "EXPENSE") {
+    filters.type = type
+    }
+
+    Add:
+    if (search) {
+    filters.title = {
+    contains: search,
+    mode: "insensitive",
+    }
+    }
+
+    Replace your current query with:
+    const transactions = await prisma.transaction.findMany({
+    where: filters,
+    include: {
+    category: true,
+    },
+    orderBy: {
+    date: "desc",
+    },
+    })
+
+    URL test:
+    http://localhost:3000/api/transactions?type=EXPENSE
+    http://localhost:3000/api/transactions?type=INCOME
+    http://localhost:3000/api/transactions?search=uber
+    http://localhost:3000/api/transactions?search=salary
+
+25. Transaction Filters UI + Transactions Page
+    This is where users actually interact with the filtering system.
+    - 25.1 — Open Transactions Page
+      Open: src/app/dashboard/transactions/page.tsx
+    - 25.2 — Create Transactions Table Component
+      Create: src/components/transactions
+      inside: TransactionsTable.tsx
+      Open: src/app/dashboard/transactions/page.tsx
+      inside:
+      Import into page: import { TransactionsTable } from "@/components/transactions/TransactionsTable"
+      Render: <TransactionsTable />
+    - 25.3 — Create Search Filter Component
+      Create: src/components/transactions/TransactionFilters.tsx
+      Render above the table:  
+      <TransactionFilters />
+      <TransactionsTable />
+
+26. Real Transactions Table
+    - 26.1 — Create Transaction Type
+      Inside: src/types
+      Create: transaction.ts
+
+    - 26.2 — Build TransactionsTable
+      Open: src/components/transactions/TransactionsTable.tsx
+
+27. Connect Filters to the Transactions Table
+    Product Goal When the user changes: Search, Transaction Type, Category - the table should automatically display the filtered results.
+    - 27.1 — Lift State Up
+      Open: src/app/dashboard/transactions/page.tsx
+      Convert it to a Client Component:
+
+    - 27.2 — Pass State to Filters
+      Future structure:
+
+    - 27.3 — Pass Filters to Table
+      <TransactionsTable
+        search={search}
+        type={type}
+        categoryId={categoryId}
+      />
+
+    - 27.4 — Update TransactionsTable Props
+      Create interface:
+      Update component:
+
+    - 27.5 — Dynamic Fetch URL
+
+    - 27.6 — Refetch When Filters Change
+      Current:
+      Replace:
+
+    - 27.Step 7 — Build Real Search Input  
+      Open: src/components/transactions/TransactionFilters.tsx
+      Create props:
+      Component:

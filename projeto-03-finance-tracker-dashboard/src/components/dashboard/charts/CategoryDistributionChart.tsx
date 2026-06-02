@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 interface CategoryData {
   name: string;
@@ -54,7 +61,7 @@ export function CategoryDistributionChart() {
             </Pie>
 
             <Tooltip
-              formatter={(value) => [`$${value}`, "Amount"]}
+              formatter={(value, name) => [`$${value}`, name]}
               contentStyle={{
                 backgroundColor: "#18181b",
                 border: "1px solid #27272a",
@@ -62,6 +69,8 @@ export function CategoryDistributionChart() {
                 color: "#fff",
               }}
             />
+
+            <Legend />
           </PieChart>
         </ResponsiveContainer>
       </div>

@@ -4,8 +4,13 @@ import { transactionSchema } from "@/schemas/transaction-schema";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
   const session = await getServerSession(authOptions);
+  const { searchParams } = new URL(request.url);
+
+  const type = searchParams.get("type");
+  const categoryId = searchParams.get("categoryId");
+  const search = searchParams.get("search");
 
   if (!session?.user?.email) {
     return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
@@ -21,10 +26,35 @@ export async function GET() {
     return NextResponse.json({ message: "user not found." }, { status: 404 });
   }
 
+  const filters: {
+    userId: string;
+    type?: "INCOME" | "EXPENSE";
+    categoryId?: string;
+    title?: {
+      contains: string;
+      mode: "insensitive";
+    };
+  } = {
+    userId: user.id,
+  };
+
+  if (type === "INCOME" || type === "EXPENSE") {
+    filters.type = type;
+  }
+
+  if (categoryId) {
+    filters.categoryId = categoryId;
+  }
+
+  if (search) {
+    filters.title = {
+      contains: search,
+      mode: "insensitive",
+    };
+  }
+
   const transactions = await prisma.transaction.findMany({
-    where: {
-      userId: user.id,
-    },
+    where: filters,
     include: {
       category: true,
     },

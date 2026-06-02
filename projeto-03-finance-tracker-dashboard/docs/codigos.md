@@ -1916,3 +1916,284 @@ Adaptadores e bibliotecas para funcionar o prisma
                )
 
         }
+
+24. -
+
+25. Transaction Filters UI + Transactions Page
+    - 25.2 — Create Transactions Table Component
+      Create: src/components/transactions
+      inside: TransactionsTable.tsx
+      "use client"
+
+      export function TransactionsTable() {
+      return (
+         <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6">
+            Transactions Table
+         </div>
+      )
+      }
+
+    - 25.3 — Create Search Filter Component
+      Create: src/components/transactions/TransactionFilters.tsx
+      "use client"
+
+      export function TransactionFilters() {
+      return (
+         <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6">
+            Filters
+         </div>
+      )
+      }
+
+26. Real Transactions Table
+    - 26.1 — Create Transaction Type
+      Inside: src/types
+      Create: transaction.ts
+      export interface Transaction {
+      id: string
+      title: string
+      amount: number
+      type: "INCOME" | "EXPENSE"
+      date: string
+
+      category: {
+      id: string
+      name: string
+      color: string
+      }
+      }
+
+    - 26.2 — Build TransactionsTable
+      Open: src/components/transactions/TransactionsTable.tsx
+      "use client"
+
+      import { useEffect, useState } from "react"
+      import { Transaction } from "@/types/transaction"
+
+      export function TransactionsTable() {
+      const [transactions, setTransactions] = useState<Transaction[]>([])
+      const [loading, setLoading] = useState(true)
+
+      useEffect(() => {
+      async function loadTransactions() {
+      try {
+      const response = await fetch("/api/transactions")
+
+            const data = await response.json()
+
+            setTransactions(data)
+            } catch (error) {
+            console.error(error)
+            } finally {
+            setLoading(false)
+            }
+
+      }
+
+      loadTransactions()
+      }, [])
+
+      if (loading) {
+      return (
+      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6">
+      Loading transactions...
+      </div>
+      )
+      }
+
+      if (!transactions.length) {
+      return (
+      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6">
+      No transactions found.
+      </div>
+      )
+      }
+
+      return (
+         <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900/50">
+            <table className="w-full">
+            <thead>
+               <tr className="border-b border-zinc-800">
+                  <th className="p-4 text-left text-zinc-400">
+                  Title
+                  </th>
+
+                  <th className="p-4 text-left text-zinc-400">
+                  Category
+                  </th>
+
+                  <th className="p-4 text-left text-zinc-400">
+                  Type
+                  </th>
+
+                  <th className="p-4 text-left text-zinc-400">
+                  Amount
+                  </th>
+
+                  <th className="p-4 text-left text-zinc-400">
+                  Date
+                  </th>
+               </tr>
+            </thead>
+
+            <tbody>
+               {transactions.map((transaction) => (
+                  <tr
+                  key={transaction.id}
+                  className="border-b border-zinc-800"
+                  >
+                  <td className="p-4 text-white">
+                     {transaction.title}
+                  </td>
+
+                  <td className="p-4">
+                     <span
+                        className="inline-flex items-center gap-2"
+                     >
+                        <span
+                        className="h-3 w-3 rounded-full"
+                        style={{
+                           backgroundColor:
+                              transaction.category.color,
+                        }}
+                        />
+
+                        <span className="text-zinc-300">
+                        {transaction.category.name}
+                        </span>
+                     </span>
+                  </td>
+
+                  <td className="p-4 text-zinc-300">
+                     {transaction.type}
+                  </td>
+
+                  <td className="p-4 text-white">
+                     ${transaction.amount}
+                  </td>
+
+                  <td className="p-4 text-zinc-300">
+                     {new Date(
+                        transaction.date
+                     ).toLocaleDateString()}
+                  </td>
+                  </tr>
+               ))}
+            </tbody>
+            </table>
+
+         </div>
+      )
+      }
+
+27. Connect Filters to the Transactions Table
+    Product Goal When the user changes: Search, Transaction Type, Category - the table should automatically display the filtered results.
+    - 27.1 — Lift State Up
+      Open: src/app/dashboard/transactions/page.tsx
+      Convert it to a Client Component:
+      "use client"
+      const [search, setSearch] = useState("")
+      const [type, setType] = useState("")
+      const [categoryId, setCategoryId] = useState("")
+    - 27.2 — Pass State to Filters
+      Future structure:
+      <TransactionFilters
+        search={search}
+        setSearch={setSearch}
+        type={type}
+        setType={setType}
+        categoryId={categoryId}
+        setCategoryId={setCategoryId}
+      />
+
+    - 27.3 — Pass Filters to Table
+      <TransactionsTable
+        search={search}
+        type={type}
+        categoryId={categoryId}
+      />
+
+    - 27.4 — Update TransactionsTable Props
+      Create interface:
+      interface TransactionsTableProps {
+      search: string
+      type: string
+      categoryId: string
+      }
+
+      Update component:
+      export function TransactionsTable({
+      search,
+      type,
+      categoryId,
+      }: TransactionsTableProps)
+
+    - 27.5 — Dynamic Fetch URL
+      Replace: fetch("/api/transactions")
+      with:
+      const params = new URLSearchParams()
+
+      if (search) {
+      params.append("search", search)
+      }
+
+      if (type) {
+      params.append("type", type)
+      }
+
+      if (categoryId) {
+      params.append("categoryId", categoryId)
+      }
+
+      const response = await fetch(
+      `/api/transactions?${params.toString()}`
+      )
+
+    - 27.6 — Refetch When Filters Change
+      Current:
+      useEffect(() => {
+      loadTransactions()
+      }, [])
+
+      Replace:
+      useEffect(() => {
+      loadTransactions()
+      }, [search, type, categoryId])
+
+    - 27.Step 7 — Build Real Search Input  
+      Open: src/components/transactions/TransactionFilters.tsx
+      Create props:
+      interface TransactionFiltersProps {
+      search: string
+      setSearch: (value: string) => void
+      }
+
+      Component:
+      export function TransactionFilters({
+      search,
+      setSearch,
+      }: TransactionFiltersProps) {
+      return (
+      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6">
+      <input
+      type="text"
+      placeholder="Search transactions..."
+      value={search}
+      onChange={(e) =>
+      setSearch(e.target.value)
+      }
+      className="
+      w-full
+      rounded-xl
+      border
+      border-zinc-700
+      bg-zinc-900
+      px-4
+      py-3
+      text-white
+      outline-none
+      "
+      />
+      </div>
+      )
+      }
