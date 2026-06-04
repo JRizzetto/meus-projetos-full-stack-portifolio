@@ -3,14 +3,38 @@
 import { useEffect, useState } from "react";
 import { Transaction } from "@/types/transaction";
 
-export function TransactionsTable() {
+interface TransactionsTableProps {
+  search: string;
+  type: string;
+  categoryId: string;
+}
+
+export function TransactionsTable({
+  search,
+  type,
+  categoryId,
+}: TransactionsTableProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadTransactions() {
       try {
-        const response = await fetch("/api/transactions");
+        const params = new URLSearchParams();
+
+        if (search) {
+          params.append("search", search);
+        }
+
+        if (type) {
+          params.append("type", type);
+        }
+
+        if (categoryId) {
+          params.append("categoryId", categoryId);
+        }
+
+        const response = await fetch(`/api/transactions?${params.toString()}`);
 
         const data = await response.json();
 
@@ -23,7 +47,7 @@ export function TransactionsTable() {
     }
 
     loadTransactions();
-  }, []);
+  }, [search, type, categoryId]);
 
   if (loading) {
     return (

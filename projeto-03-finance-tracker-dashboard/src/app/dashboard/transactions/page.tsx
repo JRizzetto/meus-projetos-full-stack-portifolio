@@ -5,14 +5,8 @@ import { TransactionsTable } from "@/components/transactions/TransactionsTable";
 import { TransactionFilters } from "@/components/transactions/TransactionFilters";
 import { useState } from "react";
 
-interface TransactionsTableProps {
-  search: string;
-  type: string;
-  categoryId: string;
-}
-
 export default function TransactionsPage() {
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState("");
   const [type, setType] = useState("");
   const [categoryId, setCategoryId] = useState("");
 

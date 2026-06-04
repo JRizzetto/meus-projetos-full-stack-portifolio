@@ -454,3 +454,75 @@ npm run dev
       Open: src/components/transactions/TransactionFilters.tsx
       Create props:
       Component:
+
+28. Advanced Filters UI
+    - 28.1 — Load Categories
+      We need categories for the dropdown.
+      Inside: src/components/transactions/TransactionFilters.tsx
+      Create:
+      interface Category {
+      id: string
+      name: string
+      }
+      State: const [categories, setCategories] = useState<Category[]>([])
+      Load categories:
+      useEffect(() => {
+      async function loadCategories() {
+      const response = await fetch("/api/categories")
+
+          const data = await response.json()
+
+          setCategories(data)
+
+      }
+
+      loadCategories()
+      }, [])
+
+    - 28.2 — Expand Props
+      Current:
+      search
+      setSearch
+
+      Add:
+      type
+      setType
+      categoryId
+      setCategoryId
+
+      Interface: (codigos.md)
+
+    - 28.3 — Add Type Select
+      Below search input: (codigos.md)
+
+    - 28.4 — Add Category Select
+      <select
+      value={categoryId}
+      onChange={(e) =>
+      setCategoryId(e.target.value)
+      }
+      className="
+      rounded-xl
+      border
+      border-zinc-700
+      bg-zinc-900
+      px-4
+      py-3
+      text-white
+      "
+
+      >
+
+        <option value="">
+          All Categories
+        </option>
+
+      {categories.map((category) => (
+      <option
+            key={category.id}
+            value={category.id}
+          >
+      {category.name}
+      </option>
+      ))}
+      </select>

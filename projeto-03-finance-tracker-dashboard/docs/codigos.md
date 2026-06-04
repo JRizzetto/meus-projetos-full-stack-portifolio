@@ -2197,3 +2197,103 @@ Adaptadores e bibliotecas para funcionar o prisma
       </div>
       )
       }
+
+28. Advanced Filters UI
+    - 28.2 — Expand Props
+      Interface: (codigos.md)
+      interface TransactionFiltersProps {
+      search: string
+      setSearch: (value: string) => void
+
+      type: string
+      setType: (value: string) => void
+
+      categoryId: string
+      setCategoryId: (value: string) => void
+      }
+
+    - 28.3 — Add Type Select
+      Below search input: (codigos.md)
+      <select
+      value={type}
+      onChange={(e) => setType(e.target.value)}
+      className="
+      rounded-xl
+      border
+      border-zinc-700
+      bg-zinc-900
+      px-4
+      py-3
+      text-white
+      "
+
+      >
+
+      <option value="">
+         All Types
+      </option>
+      <option value="INCOME">
+         Income
+      </option>
+      <option value="EXPENSE">
+         Expense
+      </option>
+      </select>
+
+    - 28.4 — Add Category Select
+      <select
+      value={categoryId}
+      onChange={(e) =>
+      setCategoryId(e.target.value)
+      }
+      className="
+      rounded-xl
+      border
+      border-zinc-700
+      bg-zinc-900
+      px-4
+      py-3
+      text-white
+      "
+
+      >
+
+         <option value="">
+            All Categories
+         </option>
+
+      {categories.map((category) => (
+         <option
+               key={category.id}
+               value={category.id}
+            >
+         {category.name}
+         </option>
+         ))}
+         </select>
+
+    - 28.5 — Better Layout
+      Replace the wrapper with: (codigos.md)
+      <div
+      className="
+         rounded-3xl
+         border
+         border-zinc-800
+         bg-zinc-900/50
+         p-6
+      "
+      >
+      <div
+         className="
+            grid
+            gap-4
+            md:grid-cols-3
+         "
+      >
+         {/* Search */}
+
+      {/_ Type _/}
+
+      {/_ Category _/}
+      </div>
+      </div>
