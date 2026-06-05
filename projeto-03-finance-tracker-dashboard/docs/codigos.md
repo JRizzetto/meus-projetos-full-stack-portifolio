@@ -2297,3 +2297,80 @@ Adaptadores e bibliotecas para funcionar o prisma
       {/_ Category _/}
       </div>
       </div>
+
+29. Date Range Filtering Architecture
+    - Extend Filter Type (codigos.md)
+      const filters: {
+      userId: string
+      type?: "INCOME" | "EXPENSE"
+      categoryId?: string
+      title?: {
+      contains: string
+      mode: "insensitive"
+      }
+      date?: {
+      gte?: Date
+      lte?: Date
+      }
+      } = {
+      userId: user.id,
+      }
+    - 29.4 — Pass Props
+      - To Filters: (codigos.md)
+        <TransactionFilters
+        ...
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        />
+      - To Table: (codigos.md)
+        <TransactionsTable
+        ...
+        startDate={startDate}
+        endDate={endDate}
+        />
+    - 29.5 — Update Filter Component
+      - Extend props:
+        startDate: string
+        setStartDate: (value: string) => void
+
+      endDate: string
+      setEndDate: (value: string) => void
+      - Add inputs: (codigos.md)
+        <input
+        type="date"
+        value={startDate}
+        onChange={(e) =>
+        setStartDate(e.target.value)
+        }
+        />
+
+        <input
+        type="date"
+        value={endDate}
+        onChange={(e) =>
+        setEndDate(e.target.value)
+        }
+        />
+
+      - 29.6 — Update Transactions Table
+        - Build URL params: (codigos.md)
+          if (startDate) {
+          params.append("startDate", startDate)
+          }
+
+          if (endDate) {
+          params.append("endDate", endDate)
+          }
+
+        - Update dependencies: (codigos.md)
+          useEffect(() => {
+          loadTransactions()
+          }, [
+          search,
+          type,
+          categoryId,
+          startDate,
+          endDate,
+          ])

@@ -495,34 +495,74 @@ npm run dev
     - 28.3 — Add Type Select
       Below search input: (codigos.md)
 
-    - 28.4 — Add Category Select
-      <select
-      value={categoryId}
-      onChange={(e) =>
-      setCategoryId(e.target.value)
+    - 28.4 — Add Category Select (codigos.md)
+
+    - 28.5 — Better Layout
+      Replace the wrapper with: (codigos.md)
+
+29. Date Range Filtering Architecture
+    Add two new filters: Start Date, End Date
+    Example:
+    Start Date: 2025-01-01
+    End Date: 2025-03-31
+    Result: Only transactions between January and March
+    - 29.1 — Backend First - Update Transactions API
+      Open:
+      src/app/api/transactions/route.ts
+      Add:
+      const startDate = searchParams.get("startDate")
+      const endDate = searchParams.get("endDate")
+      Extend Filter Type (codigos.md)
+      Add Date Filters
+      Below existing filters:
+      if (startDate || endDate) {
+      filters.date = {}
       }
-      className="
-      rounded-xl
-      border
-      border-zinc-700
-      bg-zinc-900
-      px-4
-      py-3
-      text-white
-      "
+      Start date:
+      if (startDate) {
+      filters.date!.gte = new Date(startDate)
+      }
+      End date:
+      if (endDate) {
+      filters.date!.lte = new Date(endDate)
+      }
+      Now the API supports:
+      /api/transactions?startDate=2025-01-01
+      /api/transactions?endDate=2025-03-31
+      /api/transactions?startDate=2025-01-01&endDate=2025-03-31
+    - 29.2 — Test Backend
+      Browser: /api/transactions?startDate=2025-01-01&endDate=2025-02-28
+      Expected: Only January and February transactions
+      If this works: ✅ Backend complete
+    - 29.3 — Add Date State
+      Open: src/app/dashboard/transactions/page.tsx
+      Add:
+      const [startDate, setStartDate] = useState("")
+      const [endDate, setEndDate] = useState("")
+    - 29.4 — Pass Props
+      To Filters: (codigos.md)
+      To Table: (codigos.md)
+    - 29.5 — Update Filter Component
+      Extend props: (codigos.md)
+      Add inputs: (codigos.md)
+    - 29.6 — Update Transactions Table
+      Add props:
+      startDate: string
+      endDate: string
 
-      >
+      Build URL params: (codigos.md)
+      Update dependencies: (codigos.md)
 
-        <option value="">
-          All Categories
-        </option>
-
-      {categories.map((category) => (
-      <option
-            key={category.id}
-            value={category.id}
-          >
-      {category.name}
-      </option>
-      ))}
-      </select>
+      Better Layout
+      You currently have:
+      Search
+      Type
+      Category
+      Now you'll have:
+      Search
+      Type
+      Category
+      Start Date
+      End Date
+      I'd recommend changing: md:grid-cols-3
+      to: lg:grid-cols-5

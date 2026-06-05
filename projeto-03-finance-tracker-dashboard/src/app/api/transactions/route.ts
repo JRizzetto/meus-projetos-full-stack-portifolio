@@ -12,6 +12,9 @@ export async function GET(request: Request) {
   const categoryId = searchParams.get("categoryId");
   const search = searchParams.get("search");
 
+  const startDate = searchParams.get("startDate");
+  const endDate = searchParams.get("endDate");
+
   if (!session?.user?.email) {
     return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
   }
@@ -34,9 +37,25 @@ export async function GET(request: Request) {
       contains: string;
       mode: "insensitive";
     };
+    date?: {
+      gte?: Date;
+      lte?: Date;
+    };
   } = {
     userId: user.id,
   };
+
+  if (startDate || endDate) {
+    filters.date = {};
+  }
+
+  if (startDate) {
+    filters.date!.gte = new Date(startDate);
+  }
+
+  if (endDate) {
+    filters.date!.lte = new Date(endDate);
+  }
 
   if (type === "INCOME" || type === "EXPENSE") {
     filters.type = type;
