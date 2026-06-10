@@ -527,11 +527,11 @@ npm run dev
       filters.date!.lte = new Date(endDate)
       }
       Now the API supports:
-      /api/transactions?startDate=2025-01-01
-      /api/transactions?endDate=2025-03-31
-      /api/transactions?startDate=2025-01-01&endDate=2025-03-31
+      /api/transactions?startDate=2026-01-01
+      /api/transactions?endDate=2026-03-31
+      /api/transactions?startDate=2026-01-01&endDate=2025-03-31
     - 29.2 — Test Backend
-      Browser: /api/transactions?startDate=2025-01-01&endDate=2025-02-28
+      Browser: /api/transactions?startDate=2026-01-01&endDate=2026-02-28
       Expected: Only January and February transactions
       If this works: ✅ Backend complete
     - 29.3 — Add Date State
@@ -566,3 +566,82 @@ npm run dev
       End Date
       I'd recommend changing: md:grid-cols-3
       to: lg:grid-cols-5
+
+30. Transaction Actions (Edit & Delete)
+    - 30.1 — Delete Transaction
+      Step 1 — Create Dynamic Route
+      Create: src/app/api/transactions/[id]/route.ts
+      Step 2 — DELETE Endpoint
+      Inside: (codigos.md)
+      Get the id: const { id } = await params;
+      Get session: (codigos.md)
+
+31. Edit Transaction API Architecture
+    - 31.1 — Create Update Schema
+      Inside: src/lib/validations
+      Create: transaction.ts (codigos.md)
+    - 31.2 — Add PATCH Route
+      Inside: src/app/api/transactions/[id]/route.ts (codigos.md)
+      export async function PATCH(
+      request: Request,
+      { params }: { params: Promise<{ id: string }> },
+      ) {
+      const { id } = await params;
+
+      const session = await getServerSession(authOptions);
+
+      if (!session?.user?.email) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      }
+
+      const user = await prisma.user.findUnique({
+      where: {
+      email: session.user.email,
+      },
+      });
+
+      if (!user) {
+      return NextResponse.json({ message: "User not found!" }, { status: 404 });
+      }
+
+      const transaction = await prisma.user.findFirst({
+      where: {
+      id,
+      userId: user?.id,
+      },
+      });
+
+      if (!transaction) {
+      return NextResponse.json(
+      { message: "Transaction not found!" },
+      { status: 404 },
+      );
+      }
+
+      const body = await request.json();
+
+      const validatedData = updateTransactionSchema.parse(body);
+
+      const updatedTransaction = await prisma.transaction.update({
+      where: {
+      id,
+      },
+      data: {
+      title: validatedData.title,
+      amount: validatedData.amount,
+      type: validatedData.type,
+      categoryId: validatedData.categoryId,
+      date: new Date(validatedData.date),
+      description: validatedData.description,
+      },
+      });
+
+      return NextResponse.json(updatedTransaction);
+      }
+
+32. Actions Column (Edit & Delete Buttons)
+    Open: src/components/transactions/TransactionsTable.tsx
+    - 32.1 — Add Actions Header
+      Inside: (codigos.md)
+    - 32.2 — Add Actions Cell (codigos.md)
+      src/components/transactions/TransactionsTable.tsx

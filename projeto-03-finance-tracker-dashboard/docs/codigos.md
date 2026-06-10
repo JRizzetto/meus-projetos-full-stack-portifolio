@@ -2374,3 +2374,162 @@ Adaptadores e bibliotecas para funcionar o prisma
           startDate,
           endDate,
           ])
+
+30. Transaction Actions (Edit & Delete)
+    - Step 2 — DELETE Endpoint
+      import { NextResponse } from "next/server";
+      import { getServerSession } from "next-auth";
+
+      import { authOptions } from "@/lib/auth";
+      import { prisma } from "@/lib/prisma";
+
+      export async function DELETE(
+      request: Request,
+      { params }: { params: Promise<{ id: string }> },
+      ) {
+      const { id } = await params;
+
+      const session = await getServerSession(authOptions);
+
+      if (!session?.user?.email) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      }
+
+      const user = await prisma.user.findUnique({
+      where: {
+      email: session.user.email,
+      },
+      });
+
+      if (!user) {
+      return NextResponse.json({ message: "user not found!" }, { status: 404 });
+      }
+
+      const transaction = await prisma.transaction.findFirst({
+      where: {
+      id,
+      userId: user?.id,
+      },
+      });
+
+      if (!transaction) {
+      return NextResponse.json(
+      { message: "Transaction not found!" },
+      { status: 404 },
+      );
+      }
+
+      await prisma.transaction.delete({
+      where: {
+      id,
+      },
+      });
+
+      return NextResponse.json({
+      message: "Transaction deleted successfully.",
+      });
+      }
+
+31. Edit Transaction API Architecture
+    - 31.1 — Create Update Schema
+      import { z } from "zod";
+
+      export const updateTransactionSchema = z.object({
+      title: z.string().min(3),
+      amount: z.number().positive(),
+      type: z.enum(["INCOME", "EXPENSE"]),
+      categoryId: z.string(),
+      date: z.string(),
+      description: z.string().optional(),
+      });
+
+    - 31.2 — Add PATCH Route
+      export async function PATCH(
+      request: Request,
+      { params }: { params: Promise<{ id: string }> },
+      ) {
+      const { id } = await params;
+
+      const session = await getServerSession(authOptions);
+
+      if (!session?.user?.email) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      }
+
+      const user = await prisma.user.findUnique({
+      where: {
+      email: session.user.email,
+      },
+      });
+
+      if (!user) {
+      return NextResponse.json({ message: "User not found!" }, { status: 404 });
+      }
+
+      const transaction = await prisma.user.findFirst({
+      where: {
+      id,
+      userId: user?.id,
+      },
+      });
+
+      if (!transaction) {
+      return NextResponse.json(
+      { message: "Transaction not found!" },
+      { status: 404 },
+      );
+      }
+
+      const body = await request.json();
+
+      const validatedData = updateTransactionSchema.parse(body);
+
+      const updatedTransaction = await prisma.transaction.update({
+      where: {
+      id,
+      },
+      data: {
+      title: validatedData.title,
+      amount: validatedData.amount,
+      type: validatedData.type,
+      categoryId: validatedData.categoryId,
+      date: new Date(validatedData.date),
+      description: validatedData.description,
+      },
+      });
+
+      return NextResponse.json(updatedTransaction);
+      }
+
+32. Actions Column (Edit & Delete Buttons)
+    - 32. 1 — Add Actions Header
+          <thead>
+             <tr className="border-b border-zinc-800">
+                <th className="p-4 text-left text-zinc-400">
+                   Title
+                </th>
+
+                <th className="p-4 text-left text-zinc-400">
+                   Category
+                </th>
+
+                <th className="p-4 text-left text-zinc-400">
+                   Type
+                </th>
+
+                <th className="p-4 text-left text-zinc-400">
+                   Amount
+                </th>
+
+                <th className="p-4 text-left text-zinc-400">
+                   Date
+                </th>
+
+                <th className="p-4 text-left text-zinc-400">
+                   Actions
+                </th>
+
+             </tr>
+             </thead>
+
+    - 32.2 — Add Actions Cell (codigos.md)
