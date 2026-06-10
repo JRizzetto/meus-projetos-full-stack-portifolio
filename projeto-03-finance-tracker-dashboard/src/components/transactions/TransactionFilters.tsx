@@ -11,6 +11,12 @@ interface TransactionFiltersProps {
 
   categoryId: string;
   setCategoryId: (value: string) => void;
+
+  startDate: string;
+  setStartDate: (value: string) => void;
+
+  endDate: string;
+  setEndDate: (value: string) => void;
 }
 
 interface Category {
@@ -25,6 +31,10 @@ export function TransactionFilters({
   setType,
   categoryId,
   setCategoryId,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
 }: TransactionFiltersProps) {
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -42,7 +52,7 @@ export function TransactionFilters({
 
   return (
     <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6">
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-5">
         <input
           type="text"
           placeholder="Search transactions..."
@@ -76,6 +86,22 @@ export function TransactionFilters({
             </option>
           ))}
         </select>
+
+        {/* Start Date */}
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          className="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white"
+        />
+
+        {/* End Date */}
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          className="rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white"
+        />
       </div>
     </div>
   );

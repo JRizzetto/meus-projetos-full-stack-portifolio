@@ -10,6 +10,9 @@ export default function TransactionsPage() {
   const [type, setType] = useState("");
   const [categoryId, setCategoryId] = useState("");
 
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   return (
     <section className="space-y-8">
       <div>
@@ -26,9 +29,31 @@ export default function TransactionsPage() {
         setType={setType}
         categoryId={categoryId}
         setCategoryId={setCategoryId}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
       />
 
-      <TransactionsTable search={search} type={type} categoryId={categoryId} />
+      <input
+        type="date"
+        value={startDate}
+        onChange={(e) => setStartDate(e.target.value)}
+      />
+
+      <input
+        type="date"
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+      />
+
+      <TransactionsTable
+        search={search}
+        type={type}
+        categoryId={categoryId}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </section>
   );
 }

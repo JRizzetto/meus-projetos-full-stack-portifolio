@@ -7,12 +7,16 @@ interface TransactionsTableProps {
   search: string;
   type: string;
   categoryId: string;
+  startDate: string;
+  endDate: string;
 }
 
 export function TransactionsTable({
   search,
   type,
   categoryId,
+  startDate,
+  endDate,
 }: TransactionsTableProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,6 +38,14 @@ export function TransactionsTable({
           params.append("categoryId", categoryId);
         }
 
+        if (startDate) {
+          params.append("startDate", startDate);
+        }
+
+        if (endDate) {
+          params.append("endDate", endDate);
+        }
+
         const response = await fetch(`/api/transactions?${params.toString()}`);
 
         const data = await response.json();
@@ -47,7 +59,7 @@ export function TransactionsTable({
     }
 
     loadTransactions();
-  }, [search, type, categoryId]);
+  }, [search, type, categoryId, startDate, endDate]);
 
   if (loading) {
     return (
