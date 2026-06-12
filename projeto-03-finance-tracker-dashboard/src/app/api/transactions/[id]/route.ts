@@ -74,7 +74,7 @@ export async function PATCH(
     return NextResponse.json({ message: "User not found!" }, { status: 404 });
   }
 
-  const transaction = await prisma.user.findFirst({
+  const transaction = await prisma.transaction.findFirst({
     where: {
       id,
       userId: user?.id,

@@ -24,6 +24,9 @@ export async function GET() {
     where: {
       userId: user.id,
     },
+    include: {
+      category: true,
+    },
   });
 
   const totalIncome = transactions

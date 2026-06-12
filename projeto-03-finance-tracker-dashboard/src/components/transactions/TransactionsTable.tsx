@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Transaction } from "@/types/transaction";
 import toast from "react-hot-toast";
+import { Category } from "@/types/transaction";
 
 interface TransactionsTableProps {
   search: string;
@@ -29,6 +30,12 @@ export function TransactionsTable({
   const [editTitle, setEditTitle] = useState("");
   const [editAmount, setEditAmount] = useState("");
   const [editDescription, setEditDescription] = useState("");
+
+  const [editType, setEditType] = useState<"INCOME" | "EXPENSE">("EXPENSE");
+  const [editCategoryId, setEditCategoryId] = useState("");
+  const [editDate, setEditDate] = useState("");
+
+  const [categories, setCategories] = useState<Category[]>([]);
 
   async function loadTransactions() {
     try {
@@ -92,8 +99,69 @@ export function TransactionsTable({
     }
   }
 
+  function handleEdit(transaction: Transaction) {
+    setSelectedTransaction(transaction);
+
+    setEditTitle(transaction.title);
+    setEditAmount(transaction.amount.toString());
+    setEditDescription(transaction.description || "");
+
+    setEditType(transaction.type);
+    setEditCategoryId(transaction.categoryId);
+    setEditDate(transaction.date.split("T")[0]);
+
+    setIsEditModalOpen(true);
+  }
+
+  async function handleUpdate() {
+    if (!selectedTransaction) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/api/transactions/${selectedTransaction.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: editTitle,
+            amount: Number(editAmount),
+            type: editType,
+            categoryId: editCategoryId,
+            date: editDate,
+            description: editDescription,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error();
+      }
+
+      toast.success("Transaction updated successfully.");
+
+      setIsEditModalOpen(false);
+
+      await loadTransactions();
+    } catch (error) {
+      toast.error("Failed to update transaction.");
+    }
+  }
+
+  async function loadCategories() {
+    const response = await fetch("/api/categories");
+
+    const data = await response.json();
+
+    setCategories(data);
+  }
+
   useEffect(() => {
     loadTransactions();
+    loadCategories();
   }, [search, type, categoryId, startDate, endDate]);
 
   if (loading) {
@@ -110,16 +178,6 @@ export function TransactionsTable({
         No transactions found.
       </div>
     );
-  }
-
-  function handleEdit(transaction: Transaction) {
-    setSelectedTransaction(transaction);
-
-    setEditTitle(transaction.title);
-    setEditAmount(transaction.amount.toString());
-    setEditDescription(transaction.description || "");
-
-    setIsEditModalOpen(true);
   }
 
   return (
@@ -199,12 +257,72 @@ export function TransactionsTable({
               Edit Transaction
             </h2>
 
-            <p className="mt-2 text-zinc-400">{selectedTransaction.title}</p>
+            <div className="mt-6 space-y-4">
+              <input
+                type="text"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                placeholder="Title"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white"
+              />
+
+              <input
+                type="number"
+                value={editAmount}
+                onChange={(e) => setEditAmount(e.target.value)}
+                placeholder="Amount"
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white"
+              />
+
+              <select
+                value={editType}
+                onChange={(e) =>
+                  setEditType(e.target.value as "INCOME" | "EXPENSE")
+                }
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white"
+              >
+                <option value="INCOME">Income</option>
+                <option value="EXPENSE">Expense</option>
+              </select>
+
+              <select
+                value={editCategoryId}
+                onChange={(e) => setEditCategoryId(e.target.value)}
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white"
+              >
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+
+              <input
+                type="date"
+                value={editDate}
+                onChange={(e) => setEditDate(e.target.value)}
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white"
+              />
+
+              <textarea
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                placeholder="Description"
+                rows={4}
+                className="w-full rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-white"
+              ></textarea>
+            </div>
+
+            <button
+              onClick={handleUpdate}
+              className="mt-6 mr-2 rounded-xl bg-white px-4 py-2 text-black font-medium cursor-pointer"
+            >
+              Save Changes
+            </button>
 
             <button
               onClick={() => setIsEditModalOpen(false)}
-              className="mt-6 rounded-xl border border-zinc-700 px-4 py-2 text-white
-        "
+              className="mt-6 rounded-xl border border-zinc-700 px-4 py-2 text-white cursor-pointer"
             >
               Close
             </button>
