@@ -37,6 +37,12 @@ export function TransactionsTable({
 
   const [categories, setCategories] = useState<Category[]>([]);
 
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   async function loadTransactions() {
     try {
       const params = new URLSearchParams();
@@ -61,11 +67,15 @@ export function TransactionsTable({
         params.append("endDate", endDate);
       }
 
+      params.append("page", page.toString());
+
       const response = await fetch(`/api/transactions?${params.toString()}`);
 
       const data = await response.json();
 
-      setTransactions(data);
+      setTransactions(data.transactions);
+
+      setTotalPages(data.totalPages);
     } catch (error) {
       console.error(error);
     } finally {
@@ -74,6 +84,7 @@ export function TransactionsTable({
   }
 
   async function handleDelete(id: string) {
+    setIsDeleting(true);
     const confirmed = window.confirm(
       "Are you sure you want to delete this transaction?",
     );
@@ -96,6 +107,8 @@ export function TransactionsTable({
       loadTransactions();
     } catch (error) {
       toast.error("Failed to delete transaction");
+    } finally {
+      setIsDeleting(false);
     }
   }
 
@@ -114,6 +127,7 @@ export function TransactionsTable({
   }
 
   async function handleUpdate() {
+    setIsUpdating(true);
     if (!selectedTransaction) {
       return;
     }
@@ -148,6 +162,8 @@ export function TransactionsTable({
       await loadTransactions();
     } catch (error) {
       toast.error("Failed to update transaction.");
+    } finally {
+      setIsUpdating(false);
     }
   }
 
@@ -162,7 +178,7 @@ export function TransactionsTable({
   useEffect(() => {
     loadTransactions();
     loadCategories();
-  }, [search, type, categoryId, startDate, endDate]);
+  }, [search, type, categoryId, startDate, endDate, page]);
 
   if (loading) {
     return (
@@ -241,7 +257,7 @@ export function TransactionsTable({
                     onClick={() => handleDelete(transaction.id)}
                     className="rounded-lg border border-red-900/50 px-3 py-1.5 text-sm text-red-400 transition hover:bg-red-950/30 cursor-pointer"
                   >
-                    Delete
+                    {isDeleting ? "Deleting..." : "Delete"}
                   </button>
                 </div>
               </td>
@@ -314,10 +330,11 @@ export function TransactionsTable({
             </div>
 
             <button
+              disabled={isUpdating}
               onClick={handleUpdate}
               className="mt-6 mr-2 rounded-xl bg-white px-4 py-2 text-black font-medium cursor-pointer"
             >
-              Save Changes
+              {isUpdating ? "Saving..." : "Save Changes"}
             </button>
 
             <button
@@ -329,6 +346,28 @@ export function TransactionsTable({
           </div>
         </div>
       )}
+
+      <div className="flex items-center justify-between p-4">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+          className="rounded-lg border border-zinc-700 px-4 py-2 text-white cursor-pointer"
+        >
+          Previous
+        </button>
+
+        <span className="text-zinc-400">
+          Page {page} of {totalPages}
+        </span>
+
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage(page + 1)}
+          className="rounded-lg border border-zinc-700 px-4 py-2 text-white cursor-pointer"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }

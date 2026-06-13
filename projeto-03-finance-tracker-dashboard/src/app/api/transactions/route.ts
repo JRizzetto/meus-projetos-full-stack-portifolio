@@ -15,6 +15,10 @@ export async function GET(request: Request) {
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
 
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
+  const skip = (page - 1) * limit;
+
   if (!session?.user?.email) {
     return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
   }
@@ -80,9 +84,20 @@ export async function GET(request: Request) {
     orderBy: {
       date: "desc",
     },
+    skip,
+    take: limit,
   });
 
-  return NextResponse.json(transactions);
+  const total = await prisma.transaction.count({
+    where: filters,
+  });
+
+  return NextResponse.json({
+    transactions,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  });
 }
 
 export async function POST(request: Request) {

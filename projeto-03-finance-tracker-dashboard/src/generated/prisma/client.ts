@@ -56,3 +56,8 @@ export type Category = Prisma.CategoryModel
  * 
  */
 export type Transaction = Prisma.TransactionModel
+/**
+ * Model Goal
+ * 
+ */
+export type Goal = Prisma.GoalModel
