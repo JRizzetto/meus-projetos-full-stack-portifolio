@@ -19,7 +19,7 @@ export function RecentTransactions() {
         const response = await fetch("/api/transactions");
         const data = await response.json();
 
-        setTransactions(data.slice(0, 5));
+        setTransactions(data.transactions.slice(0, 5));
       } catch (error) {
         console.error("LOAD_TRANSACTIONS_ERROR", error);
       }

@@ -26,6 +26,13 @@ export function DashboardSidebar() {
         >
           Categories
         </a>
+
+        <a
+          href="/dashboard/goals"
+          className="rounded-lg px-4 py-3 text-zinc-400 transition hover:bg-zinc-900 hover:text-white"
+        >
+          Goals
+        </a>
       </nav>
     </aside>
   );

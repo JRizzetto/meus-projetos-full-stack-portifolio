@@ -28,10 +28,13 @@ export async function GET() {
       createdAt: "desc",
     },
   });
+
+  return NextResponse.json(goals);
 }
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
+
   if (!session?.user?.email) {
     return NextResponse.json({ message: "Unauthorized." }, { status: 401 });
   }
