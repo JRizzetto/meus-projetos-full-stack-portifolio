@@ -2,10 +2,12 @@
 
 import { Goal } from "@/types/goal";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export function GoalsList() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   useEffect(() => {
     async function loadGoals() {
@@ -24,6 +26,32 @@ export function GoalsList() {
 
     loadGoals();
   }, []);
+
+  async function handleDelete(id: string) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this goal?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/goals/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error();
+      }
+
+      toast.success("Goal deleted successfully.");
+
+      setGoals((prev) => prev.filter((goal) => goal.id !== id));
+    } catch (error) {
+      toast.error("Failed to delete goal");
+    }
+  }
 
   if (loading) {
     return (
@@ -75,9 +103,38 @@ export function GoalsList() {
                 }}
               />
             </div>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setEditingGoal(goal)}
+                className="rounded-xl border border-zinc-700 px-4 py-2 text-sm text-zinc-300 transition hover:bg-zinc-800 cursor-pointer mr-2"
+              >
+                Edit
+              </button>
+
+              <button
+                onClick={() => handleDelete(goal.id)}
+                className="rounded-xl border border-red-900/50 px-4 py-2 text-sm text-red-400 transition hover:bg-red-950/30 cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         );
       })}
     </div>
   );
+
+  {
+    editingGoal && (
+      <GoalEditModal
+        goal={editingGoal}
+        onClose={() => setEditingGoal(null)}
+        onSuccess={() => {
+          setEditingGoal(null);
+          window.location.reload();
+        }}
+      />
+    );
+  }
 }
