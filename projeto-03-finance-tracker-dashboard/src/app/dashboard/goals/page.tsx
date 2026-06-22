@@ -1,7 +1,35 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import { Goal } from "@/types/goal";
+
 import { GoalsList } from "@/components/dashboard/goals/GoalsList";
 import { GoalForm } from "@/components/dashboard/goals/GoalForm";
+import { GoalStats } from "@/components/dashboard/goals/GoalsStats";
 
 export default function GoalsPage() {
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadGoals() {
+      try {
+        const response = await fetch("/api/goals");
+
+        const data = await response.json();
+
+        setGoals(data);
+      } catch (error) {
+        console.error("LOAD_GOALS_ERROR", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadGoals();
+  }, []);
+
   return (
     <section className="space-y-8">
       <div>
@@ -10,7 +38,10 @@ export default function GoalsPage() {
         <p className="mt-2 text-zinc-400">Track your savings progress.</p>
       </div>
 
+      {!loading && <GoalStats goals={goals} />}
+
       <GoalForm />
+
       <GoalsList />
     </section>
   );
