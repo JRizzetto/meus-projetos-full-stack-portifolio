@@ -21,11 +21,32 @@ export function GoalStats({ goals }: GoalStatsProps) {
     totalTarget > 0 ? (totalSaved / totalTarget) * 100 : 0;
 
   return (
-    <div>
-      <div>
-        <p>Total Goals</p>
+    <div className="grid gap-4 md:grid-cols-4">
+      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 flex flex-col justify-center items-center">
+        <p className="text-sm text-zinc-400">Total Goals</p>
 
-        <h3>{totalGoals}</h3>
+        <h3 className="mt-2 text-2xl font-semibold text-white">{totalGoals}</h3>
+      </div>
+
+      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 flex flex-col justify-center items-center">
+        <p className="text-sm text-zinc-400">Target Savings</p>
+        <h3 className="mt-2 text-2xl font-semibold text-white">
+          ${totalTarget.toLocaleString()}
+        </h3>
+      </div>
+
+      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 flex flex-col justify-center items-center">
+        <p className="text-sm text-zinc-400">Saved So Far</p>
+        <h3 className="mt-2 text-2xl font-semibold text-white">
+          ${totalSaved.toLocaleString()}
+        </h3>
+      </div>
+
+      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 flex flex-col justify-center items-center">
+        <p className="text-sm text-zinc-400">Overall Progress</p>
+        <h3 className="mt-2 text-2xl font-semibold text-emerald-400">
+          {overrallProgress.toFixed(0)}%
+        </h3>
       </div>
     </div>
   );

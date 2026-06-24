@@ -38,11 +38,23 @@ export default function GoalsPage() {
         <p className="mt-2 text-zinc-400">Track your savings progress.</p>
       </div>
 
-      {!loading && <GoalStats goals={goals} />}
+      {loading ? (
+        <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 text-zinc-400">
+          Loading statistics
+        </div>
+      ) : (
+        <GoalStats goals={goals} />
+      )}
 
       <GoalForm />
 
-      <GoalsList />
+      {loading ? (
+        <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 text-zinc-400">
+          Loading statistics
+        </div>
+      ) : (
+        <GoalsList goals={goals} />
+      )}
     </section>
   );
 }

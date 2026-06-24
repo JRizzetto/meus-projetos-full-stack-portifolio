@@ -1,32 +1,16 @@
 "use client";
 
 import { Goal } from "@/types/goal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { GoalEditModal } from "./GoalEditModal";
 
-export function GoalsList() {
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [loading, setLoading] = useState(true);
+interface GoalsListProps {
+  goals: Goal[];
+}
+
+export function GoalsList({ goals }: GoalsListProps) {
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
-
-  useEffect(() => {
-    async function loadGoals() {
-      try {
-        const response = await fetch("/api/goals");
-
-        const data = await response.json();
-
-        setGoals(data);
-      } catch (error) {
-        console.error("LOAD_GOALS_ERROR", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadGoals();
-  }, []);
 
   async function handleDelete(id: string) {
     const confirmed = window.confirm(
@@ -48,24 +32,22 @@ export function GoalsList() {
 
       toast.success("Goal deleted successfully.");
 
-      setGoals((prev) => prev.filter((goal) => goal.id !== id));
+      window.location.reload();
     } catch (error) {
       toast.error("Failed to delete goal");
     }
   }
 
-  if (loading) {
-    return (
-      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6">
-        Loading goals...
-      </div>
-    );
-  }
-
   if (!goals.length) {
     return (
-      <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6">
-        No goals found.
+      <div className="rounded-3xl border border-dashed border-zinc-800 bg-zinc-900/30 p-12 text-center">
+        <h3 className="text-xl font-semibold text-shite">
+          No financial goals yet
+        </h3>
+
+        <p className="mt-3 text-zinc-400">
+          Create your first goal and start tracking your savings progress
+        </p>
       </div>
     );
   }
@@ -82,7 +64,7 @@ export function GoalsList() {
           return (
             <div
               key={goal.id}
-              className="rounded-3xl border border-zinc-800 hover:border-zinc-700 transition-all bg-zinc-900/50 shadow-lg shadow-black/20 p-6"
+              className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:border-zinc-700"
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-white">
@@ -101,7 +83,7 @@ export function GoalsList() {
 
               <div className="mt-4 h-3 overflow-hidden rounded-full bg-zinc-800">
                 <div
-                  className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                  className="h-full rounded-full bg-emerald-500 transition-all duration-700"
                   style={{
                     width: `${percentage}%`,
                   }}
