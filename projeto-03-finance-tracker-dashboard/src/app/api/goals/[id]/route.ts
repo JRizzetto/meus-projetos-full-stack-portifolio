@@ -88,7 +88,7 @@ export async function PUT(
     },
     data: {
       title: body.title,
-      targetAmount: body.targetAmout,
+      targetAmount: body.targetAmount,
       currentAmount: body.currentAmount,
     },
   });

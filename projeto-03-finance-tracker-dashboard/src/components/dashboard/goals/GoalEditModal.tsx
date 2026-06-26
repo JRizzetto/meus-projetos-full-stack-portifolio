@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 interface GoalEditModalProps {
   goal: Goal;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (updatedGoal: Goal) => void;
 }
 
 export function GoalEditModal({
@@ -41,9 +41,11 @@ export function GoalEditModal({
         throw new Error();
       }
 
+      const updatedGoal: Goal = await response.json();
+
       toast.success("Goal updated successfully.");
 
-      onSuccess();
+      onSuccess(updatedGoal);
     } catch {
       toast.error("Failed to update goal.");
     }

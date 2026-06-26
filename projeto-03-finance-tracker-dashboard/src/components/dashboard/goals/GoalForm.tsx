@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Goal } from "@/types/goal";
 
 interface GoalFormProps {
-  onGoalCreated: () => void;
+  onGoalCreated: (goal: Goal) => void;
 }
 
 export function GoalForm({ onGoalCreated }: GoalFormProps) {
@@ -32,13 +33,15 @@ export function GoalForm({ onGoalCreated }: GoalFormProps) {
         throw new Error();
       }
 
+      const createdGoal: Goal = await response.json();
+
       toast.success("Goal created successfully.");
 
       setTitle("");
       setTargetAmount("");
       setCurrentAmount("");
 
-      onGoalCreated();
+      onGoalCreated(createdGoal);
     } catch {
       toast.error("Failed to create goal.");
     }

@@ -7,14 +7,14 @@ import { GoalEditModal } from "./GoalEditModal";
 
 interface GoalsListProps {
   goals: Goal[];
-  onGoalsChanged: () => void;
   onGoalDeleted: (id: string) => void;
+  onGoalUpdated: (goal: Goal) => void;
 }
 
 export function GoalsList({
   goals,
-  onGoalsChanged,
   onGoalDeleted,
+  onGoalUpdated,
 }: GoalsListProps) {
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
@@ -120,9 +120,9 @@ export function GoalsList({
         <GoalEditModal
           goal={editingGoal}
           onClose={() => setEditingGoal(null)}
-          onSuccess={() => {
+          onSuccess={(updatedGoal) => {
             setEditingGoal(null);
-            onGoalsChanged();
+            onGoalUpdated(updatedGoal);
           }}
         />
       )}

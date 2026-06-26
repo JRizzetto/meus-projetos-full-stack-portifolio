@@ -29,6 +29,18 @@ export default function GoalsPage() {
     setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
   }
 
+  function updateGoal(updatedGoal: Goal) {
+    setGoals((prevGoals) =>
+      prevGoals.map((goal) =>
+        goal.id === updatedGoal.id ? updatedGoal : goal,
+      ),
+    );
+  }
+
+  function addGoal(newGoal: Goal) {
+    setGoals((prevGoals) => [newGoal, ...prevGoals]);
+  }
+
   useEffect(() => {
     loadGoals();
   }, []);
@@ -45,12 +57,12 @@ export default function GoalsPage() {
         <>
           <GoalStats goals={goals} />
 
-          <GoalForm onGoalCreated={loadGoals} />
+          <GoalForm onGoalCreated={addGoal} />
 
           <GoalsList
             goals={goals}
-            onGoalsChanged={loadGoals}
             onGoalDeleted={removeGoal}
+            onGoalUpdated={updateGoal}
           />
         </>
       )}
