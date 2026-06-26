@@ -7,9 +7,15 @@ import { GoalEditModal } from "./GoalEditModal";
 
 interface GoalsListProps {
   goals: Goal[];
+  onGoalsChanged: () => void;
+  onGoalDeleted: (id: string) => void;
 }
 
-export function GoalsList({ goals }: GoalsListProps) {
+export function GoalsList({
+  goals,
+  onGoalsChanged,
+  onGoalDeleted,
+}: GoalsListProps) {
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   async function handleDelete(id: string) {
@@ -32,7 +38,7 @@ export function GoalsList({ goals }: GoalsListProps) {
 
       toast.success("Goal deleted successfully.");
 
-      window.location.reload();
+      onGoalsChanged();
     } catch (error) {
       toast.error("Failed to delete goal");
     }
@@ -116,7 +122,7 @@ export function GoalsList({ goals }: GoalsListProps) {
           onClose={() => setEditingGoal(null)}
           onSuccess={() => {
             setEditingGoal(null);
-            window.location.reload();
+            onGoalsChanged();
           }}
         />
       )}

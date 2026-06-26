@@ -3,7 +3,11 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-export function GoalForm() {
+interface GoalFormProps {
+  onGoalCreated: () => void;
+}
+
+export function GoalForm({ onGoalCreated }: GoalFormProps) {
   const [title, setTitle] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
   const [currentAmount, setCurrentAmount] = useState("");
@@ -34,7 +38,7 @@ export function GoalForm() {
       setTargetAmount("");
       setCurrentAmount("");
 
-      window.location.reload();
+      onGoalCreated();
     } catch {
       toast.error("Failed to create goal.");
     }

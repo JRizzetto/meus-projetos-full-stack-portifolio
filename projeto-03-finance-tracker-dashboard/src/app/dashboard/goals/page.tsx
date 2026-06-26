@@ -12,21 +12,24 @@ export default function GoalsPage() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function loadGoals() {
-      try {
-        const response = await fetch("/api/goals");
+  async function loadGoals() {
+    try {
+      const response = await fetch("/api/goals");
+      const data = await response.json();
 
-        const data = await response.json();
-
-        setGoals(data);
-      } catch (error) {
-        console.error("LOAD_GOALS_ERROR", error);
-      } finally {
-        setLoading(false);
-      }
+      setGoals(data);
+    } catch (error) {
+      console.error("LOAD_GOALS_ERROR", error);
+    } finally {
+      setLoading(false);
     }
+  }
 
+  function removeGoal(id: string) {
+    setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id));
+  }
+
+  useEffect(() => {
     loadGoals();
   }, []);
 
@@ -38,22 +41,18 @@ export default function GoalsPage() {
         <p className="mt-2 text-zinc-400">Track your savings progress.</p>
       </div>
 
-      {loading ? (
-        <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 text-zinc-400">
-          Loading statistics
-        </div>
-      ) : (
-        <GoalStats goals={goals} />
-      )}
+      {!loading && (
+        <>
+          <GoalStats goals={goals} />
 
-      <GoalForm />
+          <GoalForm onGoalCreated={loadGoals} />
 
-      {loading ? (
-        <div className="rounded-3xl border border-zinc-800 bg-zinc-900/50 p-6 text-zinc-400">
-          Loading statistics
-        </div>
-      ) : (
-        <GoalsList goals={goals} />
+          <GoalsList
+            goals={goals}
+            onGoalsChanged={loadGoals}
+            onGoalDeleted={removeGoal}
+          />
+        </>
       )}
     </section>
   );
