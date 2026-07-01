@@ -40,6 +40,30 @@ export function TransactionForm() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (!title.trim()) {
+      toast.error("Please enter a transaction title.");
+      return;
+    }
+
+    if (Number(amount) <= 0) {
+      toast.error("mount must be grater than zero.");
+      return;
+    }
+
+    if (!date) {
+      toast.error("Please select a date.");
+      return;
+    }
+
+    if (!categoryId) {
+      toast.error("Please select a category.");
+      return;
+    }
+
+    if (isLoading) {
+      return;
+    }
+
     setIsLoading(true);
 
     try {

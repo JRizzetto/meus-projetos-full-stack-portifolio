@@ -13,10 +13,28 @@ export function GoalForm({ onGoalCreated }: GoalFormProps) {
   const [targetAmount, setTargetAmount] = useState("");
   const [currentAmount, setCurrentAmount] = useState("");
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    if (!title.trim()) {
+      toast.error("Please enter a goal title.");
+      return;
+    }
+
+    if (Number(targetAmount) <= 0) {
+      toast.error("Target amount must be greater than 0.");
+      return;
+    }
+
+    if (Number(currentAmount) < 0) {
+      toast.error("Current amount cannot be negative.");
+      return;
+    }
+
     try {
+      setIsSubmitting(true);
       const response = await fetch("/api/goals", {
         method: "POST",
         headers: {
@@ -44,6 +62,8 @@ export function GoalForm({ onGoalCreated }: GoalFormProps) {
       onGoalCreated(createdGoal);
     } catch {
       toast.error("Failed to create goal.");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -78,9 +98,10 @@ export function GoalForm({ onGoalCreated }: GoalFormProps) {
 
       <button
         type="submit"
+        disabled={isSubmitting}
         className="rounded-xl bg-emerald-600 px-6 py-3 text-white hover:bg-emerald-500 cursor-pointer"
       >
-        Create Goal
+        {isSubmitting ? "Creating..." : "Create Goal"}
       </button>
     </form>
   );

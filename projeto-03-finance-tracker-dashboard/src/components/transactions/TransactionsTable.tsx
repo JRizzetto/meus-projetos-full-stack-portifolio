@@ -84,14 +84,16 @@ export function TransactionsTable({
   }
 
   async function handleDelete(id: string) {
-    setIsDeleting(true);
     const confirmed = window.confirm(
       "Are you sure you want to delete this transaction?",
     );
 
     if (!confirmed) {
+      setIsDeleting(false);
       return;
     }
+
+    setIsDeleting(true);
 
     try {
       const response = await fetch(`/api/transactions/${id}`, {
@@ -127,8 +129,29 @@ export function TransactionsTable({
   }
 
   async function handleUpdate() {
-    setIsUpdating(true);
     if (!selectedTransaction) {
+      return;
+    }
+
+    setIsUpdating(true);
+
+    if (!editTitle.trim()) {
+      toast.error("Please enter a transaction title.");
+      return;
+    }
+
+    if (Number(editAmount) <= 0) {
+      toast.error("Amount must be greater than zero.");
+      return;
+    }
+
+    if (!editDate) {
+      toast.error("Please select a date.");
+      return;
+    }
+
+    if (!editCategoryId) {
+      toast.error("Please select a category.");
       return;
     }
 
@@ -179,6 +202,10 @@ export function TransactionsTable({
     loadTransactions();
     loadCategories();
   }, [search, type, categoryId, startDate, endDate, page]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, type, categoryId, startDate, endDate]);
 
   if (loading) {
     return (
@@ -237,7 +264,13 @@ export function TransactionsTable({
 
               <td className="p-4 text-zinc-300">{transaction.type}</td>
 
-              <td className="p-4 text-white">${transaction.amount}</td>
+              <td className="p-4 text-white">
+                $
+                {Number(transaction.amount).toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </td>
 
               <td className="p-4 text-zinc-300">
                 {new Date(transaction.date).toLocaleDateString()}
@@ -332,14 +365,15 @@ export function TransactionsTable({
             <button
               disabled={isUpdating}
               onClick={handleUpdate}
-              className="mt-6 mr-2 rounded-xl bg-white px-4 py-2 text-black font-medium cursor-pointer"
+              className="mt-6 mr-2 rounded-xl bg-white px-4 py-2 font-medium text-black transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isUpdating ? "Saving..." : "Save Changes"}
             </button>
 
             <button
+              disabled={isUpdating}
               onClick={() => setIsEditModalOpen(false)}
-              className="mt-6 rounded-xl border border-zinc-700 px-4 py-2 text-white cursor-pointer"
+              className="rounded-lg border border-zinc-700 px-4 py-2 text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
             >
               Close
             </button>
@@ -351,7 +385,7 @@ export function TransactionsTable({
         <button
           disabled={page === 1}
           onClick={() => setPage(page - 1)}
-          className="rounded-lg border border-zinc-700 px-4 py-2 text-white cursor-pointer"
+          className="rounded-lg border border-zinc-700 px-4 py-2 text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Previous
         </button>
@@ -363,7 +397,7 @@ export function TransactionsTable({
         <button
           disabled={page === totalPages}
           onClick={() => setPage(page + 1)}
-          className="rounded-lg border border-zinc-700 px-4 py-2 text-white cursor-pointer"
+          className="rounded-lg border border-zinc-700 px-4 py-2 text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Next
         </button>

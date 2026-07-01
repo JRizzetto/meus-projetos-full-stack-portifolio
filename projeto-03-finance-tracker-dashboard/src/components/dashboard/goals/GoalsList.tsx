@@ -38,7 +38,7 @@ export function GoalsList({
 
       toast.success("Goal deleted successfully.");
 
-      onGoalsChanged();
+      onGoalDeleted(id);
     } catch (error) {
       toast.error("Failed to delete goal");
     }

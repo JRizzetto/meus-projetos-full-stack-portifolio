@@ -21,10 +21,28 @@ export function GoalEditModal({
     String(goal.currentAmount),
   );
 
+  const [isSubmitting, setisSubmitting] = useState(false);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    if (!title.trim()) {
+      toast.error("Pelase enter a goal title.");
+      return;
+    }
+
+    if (Number(targetAmount) <= 0) {
+      toast.error("target amount must be greater than 0");
+      return;
+    }
+
+    if (Number(currentAmount) < 0) {
+      toast.error("Current amount cannot be negative.");
+      return;
+    }
+
     try {
+      setisSubmitting(true);
       const response = await fetch(`/api/goals/${goal.id}`, {
         method: "PUT",
         headers: {
@@ -48,6 +66,8 @@ export function GoalEditModal({
       onSuccess(updatedGoal);
     } catch {
       toast.error("Failed to update goal.");
+    } finally {
+      setisSubmitting(false);
     }
   }
 
@@ -92,9 +112,10 @@ export function GoalEditModal({
 
             <button
               type="submit"
+              disabled={isSubmitting}
               className="rounded-xl bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-500"
             >
-              Save Changes
+              {isSubmitting ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>
