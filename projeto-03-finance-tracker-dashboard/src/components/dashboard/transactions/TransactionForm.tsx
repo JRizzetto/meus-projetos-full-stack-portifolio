@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { Select } from "@/components/ui/Select";
 
 interface Category {
   id: string;
@@ -128,14 +129,14 @@ export function TransactionForm() {
           className="rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"
         />
 
-        <select
+        <Select
           value={type}
           onChange={(event) => setType(event.target.value)}
           className="rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-white outline-none focus:border-emerald-500"
         >
           <option value="INCOME">Income</option>
           <option value="EXPENSE">Expense</option>
-        </select>
+        </Select>
 
         <input
           type="date"
