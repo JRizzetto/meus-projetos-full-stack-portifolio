@@ -99,10 +99,7 @@ export function GoalForm({ onGoalCreated }: GoalFormProps) {
           className="w-full rounded-xl border border-zinc-800 bg-zinc-950 p-3 text-white"
         />
 
-        <Button
-          type="submit"
-          className="bg-emerald-600 px-6 py-3 textwhite hover:bg-emerald-500 cursor-pointer"
-        >
+        <Button type="submit">
           {isSubmitting ? "Creating..." : "Create Goal"}
         </Button>
       </form>

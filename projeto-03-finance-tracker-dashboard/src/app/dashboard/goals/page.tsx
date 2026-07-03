@@ -4,17 +4,22 @@ import { GoalForm } from "@/components/dashboard/goals/GoalForm";
 import { GoalsList } from "@/components/dashboard/goals/GoalsList";
 import { GoalStats } from "@/components/dashboard/goals/GoalsStats";
 import { useGoals } from "@/hooks/useGoals";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 export default function GoalsPage() {
   const { goals, loading, removeGoal, updateGoal, addGoal } = useGoals();
 
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <section className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-semibold text-white">Financial Goals</h1>
-
-        <p className="mt-2 text-zinc-400">Track your savings progress.</p>
-      </div>
+      <PageHeader
+        title="Financial Goals"
+        description="Track your savings progress."
+      />
 
       {!loading && (
         <>

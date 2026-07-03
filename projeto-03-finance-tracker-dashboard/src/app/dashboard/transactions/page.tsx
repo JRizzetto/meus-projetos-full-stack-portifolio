@@ -4,6 +4,7 @@ import { TransactionForm } from "@/components/dashboard/transactions/Transaction
 import { TransactionsTable } from "@/components/transactions/TransactionsTable";
 import { TransactionFilters } from "@/components/transactions/TransactionFilters";
 import { useState } from "react";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function TransactionsPage() {
   const [search, setSearch] = useState("");
@@ -15,10 +16,10 @@ export default function TransactionsPage() {
 
   return (
     <section className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-semibold text-white">Transactions</h1>
-        <p className="mt-2 text-zinc-400">Register your income and expenses.</p>
-      </div>
+      <PageHeader
+        title="Transactions"
+        description="Register your income and expenses."
+      />
 
       <TransactionForm />
 

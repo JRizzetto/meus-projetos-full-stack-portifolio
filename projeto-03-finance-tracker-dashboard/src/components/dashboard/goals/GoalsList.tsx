@@ -4,6 +4,7 @@ import { Goal } from "@/types/goal";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { GoalEditModal } from "./GoalEditModal";
+import { Button } from "@/components/ui/Button";
 
 interface GoalsListProps {
   goals: Goal[];
@@ -97,19 +98,16 @@ export function GoalsList({
               </div>
 
               <div className="mt-6 flex justify-end">
-                <button
+                <Button
+                  variant="secondary"
                   onClick={() => setEditingGoal(goal)}
-                  className="rounded-xl border border-zinc-700 px-4 py-2 text-sm text-zinc-300 transition hover:bg-zinc-800 cursor-pointer mr-2"
                 >
                   Edit
-                </button>
+                </Button>
 
-                <button
-                  onClick={() => handleDelete(goal.id)}
-                  className="rounded-xl border border-red-900/50 px-4 py-2 text-sm text-red-400 transition hover:bg-red-950/30 cursor-pointer"
-                >
+                <Button variant="danger" onClick={() => handleDelete(goal.id)}>
                   Delete
-                </button>
+                </Button>
               </div>
             </div>
           );

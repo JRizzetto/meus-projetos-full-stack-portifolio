@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Select } from "@/components/ui/Select";
+import { Button } from "@/components/ui/Button";
 
 interface Category {
   id: string;
@@ -169,12 +170,9 @@ export function TransactionForm() {
         />
       </div>
 
-      <button
-        disabled={isLoading}
-        className="mt-6 rounded-lg bg-emerald-500 px-4 py-3 text-sm font-medium text-zinc-950 hover:bg-emerald-400 disabled:opacity-70 cursor-pointer"
-      >
+      <Button type="submit" disabled={isLoading}>
         {isLoading ? "Creating..." : "Create transaction"}
-      </button>
+      </Button>
     </form>
   );
 }
