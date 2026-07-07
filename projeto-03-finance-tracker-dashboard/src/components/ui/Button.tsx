@@ -31,6 +31,7 @@ export function Button({
         cursor-pointer
         disabled:cursor-not-allowed
         disabled:opacity-50
+        mt-2
         ${variants[variant]}
         ${className}
       `}

@@ -228,6 +228,19 @@ export function TransactionsTable({
     );
   }
 
+  if (!transactions.length) {
+    return (
+      <div className="rounded-3xl border border-dashed border-zinc-800 bg-zinc-900//30 p-12 text-center">
+        <h3 className="text-xl font-semibold text-white">
+          No transactions yet
+        </h3>
+        <p className="mt-3 text-zinc-400">
+          Create your first transaction to start tracking your finances.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900/50">
       <table className="w-full">
