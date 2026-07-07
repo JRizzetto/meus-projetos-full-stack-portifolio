@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 export function LoginForm() {
   const router = useRouter();
@@ -41,39 +42,47 @@ export function LoginForm() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mx-auto mt-20 flex w-full max-w-md flex-col gap-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-8 text-white shadow-xl"
-    >
-      <div>
-        <h1 className="text-2xl font-semibold">Welcome back</h1>
-        <p className="mt-2 text-sm text-zinc-400">
-          Login to continue managing your finances.
-        </p>
-      </div>
-
-      <input
-        type="email"
-        placeholder="Email address"
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
-        className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm outline-none focus:border-emerald-500"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(event) => setPassword(event.target.value)}
-        className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm outline-none focus:border-emerald-500"
-      />
-
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="rounded-lg bg-emerald-500 px-4 py-3 text-sm font-medium text-zinc-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer"
+    <div className="mx-auto mt-20 w-full max-w-md">
+      <Link
+        href="/"
+        className="mb-6 inline-flex items-center gap-2 text-sm text-zinc-400 transition hover:text-emerald-400"
       >
-        {isLoading ? "Signing in..." : "Sign in"}
-      </button>
-    </form>
+        ← Back to Home
+      </Link>
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto mt-2 flex w-full max-w-md flex-col gap-4 rounded-2xl border border-zinc-800 bg-zinc-950 p-8 text-white shadow-xl"
+      >
+        <div>
+          <h1 className="text-2xl font-semibold">Welcome back</h1>
+          <p className="mt-2 text-sm text-zinc-400">
+            Login to continue managing your finances.
+          </p>
+        </div>
+
+        <input
+          type="email"
+          placeholder="Email address"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm outline-none focus:border-emerald-500"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          className="rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm outline-none focus:border-emerald-500"
+        />
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="rounded-lg bg-emerald-500 px-4 py-3 text-sm font-medium text-zinc-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer"
+        >
+          {isLoading ? "Signing in..." : "Sign in"}
+        </button>
+      </form>
+    </div>
   );
 }
