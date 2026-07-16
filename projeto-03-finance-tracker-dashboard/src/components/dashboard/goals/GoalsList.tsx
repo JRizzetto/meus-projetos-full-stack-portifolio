@@ -97,7 +97,7 @@ export function GoalsList({
                 />
               </div>
 
-              <div className="mt-6 flex justify-end">
+              <div className="mt-6 gap-2 flex justify-end">
                 <Button
                   variant="secondary"
                   onClick={() => setEditingGoal(goal)}
