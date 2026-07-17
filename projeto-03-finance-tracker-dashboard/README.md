@@ -4,9 +4,9 @@ Aplicação Full Stack para gerenciamento financeiro pessoal, desenvolvida com *
 
 ## 🌐 Demonstração
 
-🔗 **Aplicação:** https://SEU-PROJETO.vercel.app
+🔗 **Aplicação:** https://finance-tracker-pied-chi.vercel.app/
 
-📂 **Repositório:** https://github.com/SEU-USUARIO/projeto-03-finance-tracker-dashboard
+📂 **Repositório:** https://github.com/JRizzetto
 
 ## 📖 Sobre o projeto
 
