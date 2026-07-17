@@ -76,20 +76,42 @@ A modern Habit Tracker application focused on consistency, streak tracking and d
 
 ---
 
-## 🚧 Project 03 — Finance Tracker
+## ✅ Project 03 — FinanceTracker
 
-A personal finance management platform focused on financial organization and dashboard analytics.
+A modern personal finance management platform designed to help users organize their finances through an intuitive dashboard, transaction management and financial goals.
 
-### Planned Features
-- Income and expense tracking
-- Financial dashboard
-- Charts and reports
-- Monthly analytics
-- Transaction categories
+### Main Features
+
 - Authentication system
+- Protected routes
+- Income and expense management
+- Transaction CRUD
+- Category CRUD
+- Financial goals management
+- Interactive dashboard
+- Financial analytics
+- Charts and reports
+- Responsive UI
+- Landing page
+- Toast feedback system
+
+### Tech Stack
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Prisma ORM
+- PostgreSQL (Neon)
+- NextAuth
+- Recharts
+- Zod
+- bcryptjs
+- React Hot Toast
+- Vercel
 
 ### Status
-🚧 In Development
+
+✅ Completed
 
 ---
 
